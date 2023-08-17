@@ -1,7 +1,7 @@
 from scipy.signal import butter, lfilter
 import numpy as np
 
-def butter_bandpass_filter(signal, lowcut, highcut, fs, order=4):
+def butter_bandpass_filter(signal, lowcut, highcut, fs, order=5):
     b, a = butter(order, [lowcut, highcut], btype='bandpass', analog=False, output='ba', fs=fs)
     filtered_signal = lfilter(b, a, signal)
     return filtered_signal
