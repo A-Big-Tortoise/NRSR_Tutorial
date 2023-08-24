@@ -1,6 +1,6 @@
 import numpy as np
 from PyEMD import EEMD, EMD
-from vmdpy import VMD
+# from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 """
