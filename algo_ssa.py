@@ -150,7 +150,6 @@ if __name__ == '__main__':
     from Dataset import load_scg
 
     # Load SCG data with specified parameters
-    # 0.8: portion of data to load
     # 'train': data split to load (train/validation/test)
     signals, labels, duration, fs = load_scg(0.8, 'train')
 
@@ -193,6 +192,7 @@ if __name__ == '__main__':
 
     # Display the plots
     plt.show()
+
 
 
 

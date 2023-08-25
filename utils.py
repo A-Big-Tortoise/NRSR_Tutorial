@@ -23,7 +23,7 @@ def plot_2vectors(label, pred, save=False, name=None):
 
     plt.scatter(np.arange(list2.shape[0]), list2[sorted_id], s=1, alpha=0.5, label=f'{name} prediction', color='blue')
     plt.scatter(np.arange(list1.shape[0]), list1[sorted_id], s=1, alpha=0.5, label=f'{name} label', color='red')
-    plt.legend()
+    plt.legend(loc='lower right')
 
     if save:
         if name is None:

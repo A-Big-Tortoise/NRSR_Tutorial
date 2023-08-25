@@ -29,13 +29,13 @@ def algo_linearregression(data_train, label_train, data_test, label_test):
 
     # Reshape 1D arrays to 2D if necessary
     if data_train_np.ndim == 1:
-        data_train_np = data_train_np.reshape(1, -1)
+        data_train_np = data_train_np.reshape(-1, 1)
     if data_test_np.ndim == 1:
-        data_test_np = data_test_np.reshape(1, -1)
+        data_test_np = data_test_np.reshape(-1, 1)
     if label_train_np.ndim == 1:
-        label_train_np = label_train_np.reshape(1, -1)
+        label_train_np = label_train_np.reshape(-1, 1)
     if label_test_np.ndim == 1:
-        label_test_np = label_test_np.reshape(1, -1)
+        label_test_np = label_test_np.reshape(-1, 1)
 
     # Fit a Linear Regression model
     reg = LinearRegression().fit(data_train_np, label_train_np)

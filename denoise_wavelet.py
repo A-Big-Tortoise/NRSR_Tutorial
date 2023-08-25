@@ -34,3 +34,24 @@ def wdenoise(data, method, threshold):
     
     return datarec
 
+if __name__ == '__main__':
+    from Dataset import load_scg
+    import matplotlib.pyplot as plt
+
+    # Load SCG data with specified parameters
+    signals, labels, duration, fs = load_scg(0.1, 'train')
+
+    # Choose a specific signal from the loaded dataset
+    idx = 0
+    signal = signals[idx]
+    denoised_signal = wdenoise(signal, 'sym4', 0.12)
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(signal, label='Noisy Signal')
+    plt.plot(denoised_signal, label='Denoised Signal')
+    plt.title('Wavelet Denoising')
+
+    plt.legend()
+    plt.show()
+
+
