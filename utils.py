@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+import pickle
 
 # 此代码需要大改，但暂时可以用
 def calc_mae(gt, pred):
@@ -32,3 +32,45 @@ def plot_2vectors(label, pred, save=False, name=None):
         print(f'Saved plot to {name}.jpg')
 
     plt.show()
+
+    # mylist = Kshapes_template_test
+    # filepath = '../Data/NewTry/Kshapes_templates_0.1_3000_test.csv'
+
+    # def write_csv(mylist, filepath):
+    #     import csv
+    #     with open(filepath, 'w', newline='') as file:
+    #         writer = csv.writer(file)
+    #         writer.writerow(mylist)
+
+    # def write_csv(filepath):
+    #     import csv
+    #     with open(filepath, 'r') as file:
+    #         reader = csv.reader(file)
+    #         # for row in reader:
+    #             # row
+    #             # print(row)
+    #     return reader
+
+    # write_csv(mylist, filepath)
+    # new_kshapes_train = read_csv(filepath)
+    # with open(filepath, 'w', newline='') as file:
+    #     writer = csv.writer(file)
+    #     writer.writerow(mylist)
+
+    def ls2pkl(filepath, data):
+        with open(filepath, 'wb') as f:
+            pickle.dump(data, f)
+
+    def pkl2ls(filepath):
+        with open(filepath, 'rb') as f:
+            data = pickle.load(f)
+        return data
+
+    def dic2pkl(filepath, data):
+        with open(filepath, 'wb') as f:
+            pickle.dump(data, f)
+
+    def dicl2ls(filepath):
+        with open(filepath, 'rb') as f:
+            data = pickle.load(f)
+        return data

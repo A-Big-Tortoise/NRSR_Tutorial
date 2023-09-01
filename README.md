@@ -2,14 +2,6 @@
 
 ## Dataset 
 
-| CONTENT       | Noise Level | N_Samples   | Train Set | Test Set |
-| ------------- | ----------- | ----------- | --------- | -------- |
-| Simulated SCG | 0           | 5000 / 3000 | &#10004;  | &#10004; |
-| Simulated SCG | 0.1         | 5000 / 3000 | &#10004;  | &#10004; |
-| Simulated SCG | 0.8         | 5000 / 3000 | &#10004;  | &#10004; |
-
-
-
 ## Academic Signals Generation
 
 ### Base Waves Generation
@@ -75,56 +67,12 @@
 | Seasonal Decompose                | &#10004;  | &#10004; |
 | Empirical wavelet transform (EWT) | &#10004;  | &#10004; |
 | Singular Spectrum Analysis (SSA)  | &#10004;  | &#10004; |
-| PCA based Blind source separation | &#10004;  | &#10008; |
-| ICA based Blind source separation | &#10004;  | &#10008; |
-
-## Machine learning for signals
-
-### Clustering
-
-| CONTENT                      | IMPLEMENT | EXAMPLE |
-| ---------------------------- | --------- | ------- |
-| K-means                      |           |         |
-| DBSCAN                       |           |         |
-| K-shape                      |           |         |
-| Gaussian Mixture Model (GMM) |           |         |
-| Spectral Clustering          |           |         |
+| PCA based Blind source separation | &#10004;  | &#10004; |
+| ICA based Blind source separation | &#10004;  | &#10004; |
 
 
 
-### Classification
 
-| CONTENT                                        | IMPLEMENT | EXAMPLE |
-| ---------------------------------------------- | --------- | ------- |
-| KNN                                            |           |         |
-| Support Vector Machine (SVM)                   |           |         |
-| Decision trees                                 |           |         |
-| Random forest                                  |           |         |
-| Time-series specific Support Vector Classifier |           |         |
-
-### Regression
-
-| CONTNET                                       | IMPLEMENT | EXAMPLE |
-| --------------------------------------------- | --------- | ------- |
-| Time-series specific Support Vector Regressor |           |         |
-
-
-
-### Semi-supervised approaches
-
-| CONTNET | IMPLEMENT | EXAMPLE |
-| ------- | --------- | ------- |
-|         |           |         |
-
-
-
-### Ensemble methods
-
-| CONTNET                        | IMPLEMENT | EXAMPLE |
-| ------------------------------ | --------- | ------- |
-| Random Forest (bagging)        |           |         |
-| AdaBoost (boosting)            |           |         |
-| XGBoost (boosting and bagging) |           |         |
 
 
 
