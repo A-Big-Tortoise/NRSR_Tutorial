@@ -36,10 +36,10 @@ def load_scg(noise_level, train_or_test: str):
     # Get the absolute path of the current file
     current_file_path = os.path.abspath(__file__)
 
-    filepath = 'data\sim_{}_{}_{}_{}_{}.npy'.format(n_samples, noise_level, S_start, S_end, train_or_test)
+    filepath = 'sim_{}_{}_{}_{}_{}.npy'.format(n_samples, noise_level, S_start, S_end, train_or_test)
 
     # Combine the current file's directory and the constructed file path
-    file_path = os.path.join(os.path.dirname(current_file_path), filepath)
+    file_path = os.path.join(os.path.dirname(current_file_path), 'data', filepath)
 
     # Load data from the constructed file path
     data = np.load(file_path)
@@ -70,13 +70,13 @@ def load_scg_template(noise_level, train_or_test: str):
         n_samples = 5000
     elif train_or_test.lower() == 'test':
         n_samples = 3000
-    filepath = 'classification_S\sim_{}_0.1_{}_{}_{}_template.npy'.format(n_samples, S_start, S_end, train_or_test)
+    filepath = 'sim_{}_0.1_{}_{}_{}_template.npy'.format(n_samples, S_start, S_end, train_or_test)
 
     # Get the absolute path of the current file
     current_file_path = os.path.abspath(__file__)
 
     # Combine the current file's directory and the constructed file path
-    file_path = os.path.join(os.path.dirname(current_file_path), filepath)
+    file_path = os.path.join(os.path.dirname(current_file_path), 'classification_S', filepath)
 
     # Load data from the constructed file path
     data = np.load(file_path, allow_pickle=True)
