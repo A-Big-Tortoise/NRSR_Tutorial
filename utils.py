@@ -74,3 +74,27 @@ def plot_2vectors(label, pred, save=False, name=None):
         with open(filepath, 'rb') as f:
             data = pickle.load(f)
         return data
+
+def plot_noise_signal(original_signal, noisy_signal, title_name):
+    plt.plot(noisy_signal, label='Noisy Signal')
+    plt.plot(original_signal, label='Original Signal')
+    plt.title(title_name)
+    plt.legend()
+    plt.show()
+
+def plot_decomposed_components(signal, components, title_name):
+    n_components = len(components)
+
+    plt.subplots(n_components+1, 1)
+    plt.subplot(n_components+1, 1, 1)
+    plt.title(title_name)
+
+    plt.plot(signal, label='Original Signal', color='r')
+
+    for cnt, component in enumerate(components):
+        # print(cnt+1, n_components)
+        plt.subplot(n_components+1, 1, cnt+2)
+        plt.plot(component, label='Component'+str(cnt+1))
+        plt.legend()
+
+    plt.show()

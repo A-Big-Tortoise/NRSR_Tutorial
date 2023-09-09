@@ -1,7 +1,5 @@
 # 模块尽量使用小写命名，首字母保持小写，尽量不用下划线(除非多个单词，且数量不多的情况)
 import numpy as np
-# 1. linear Regression
-
 
 def algo_linearregression(data_train, label_train, data_test, label_test):
     """

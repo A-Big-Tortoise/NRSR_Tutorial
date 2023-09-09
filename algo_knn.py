@@ -101,3 +101,9 @@ if __name__ == '__main__':
     print('---confusion matrix---')
     print(con_matrix)
 
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    sns.heatmap(con_matrix, annot=True, cmap='YlGnBu')
+    plt.title('Confusion Matrix of KNN')
+    plt.savefig('./knn.jpg', dpi=300)
+    plt.show()

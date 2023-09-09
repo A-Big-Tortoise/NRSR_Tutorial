@@ -72,17 +72,9 @@
 
 
 
-## Machine Learning
 
-### Clustering
 
-### Classification
 
-| CONTENT        | IMPLEMENT | EXAMPLE  |
-| -------------- | --------- | -------- |
-| kNN            | &#10004;  | &#10004; |
-| SVC            | &#10004;  | &#10004; |
-| Decision trees | &#10004;  | &#10004; |
-| Random forest  | &#10004;  | &#10004; |
-| TimeSeriesSVC  | &#10004;  | &#10004; |
+
+
 

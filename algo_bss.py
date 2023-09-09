@@ -86,4 +86,6 @@ if __name__ == '__main__':
             plt.plot(sig, color=color)
 
     plt.tight_layout()
+    plt.savefig('./bss.jpg', dpi=300)
+
     plt.show()

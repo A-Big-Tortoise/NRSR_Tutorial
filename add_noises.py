@@ -2,6 +2,7 @@ import numpy as np
 from scipy.signal import butter
 from sim_waves import sine_wave
 import copy
+from utils import plot_noise_signal
 """
 可能潜藏着的问题：
 1. 生成的噪声是否需要考虑noise_freq和nosie_duration
@@ -11,24 +12,33 @@ import copy
 """
 
 
-def white_noise_nk2(
-        signal,  noise_amplitude=0.1, model='gaussian'
+def add_white_noise(
+        signal,  noise_amplitude=0.1, model=0, show=False
         ):
-    """maybe need to check the nyquist """
+    """maybe need to check the nyquist
+    if model == 0: gaussian noise
+    if model == 1: laplace noise
+    """
     signal_sd = np.std(signal, ddof=1)
     amp = signal_sd * noise_amplitude
 
-    if model.lower() == 'gaussian':
+    _noise = 0
+    if model == 0:
         _noise = np.random.normal(0, amp, len(signal))
-    elif model.lower() == 'laplace':
+    elif model == 1:
         _noise = np.random.laplace(0, amp, len(signal))
 
-    return _noise
+    noisy_signal = _noise + signal
+
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add White Noise')
+
+    return noisy_signal
 
 
 # 和上面的白噪声一样，没有考虑过noise_freq和noise_duration，可能后期需要大改
-def band_limited_white_noise_nk2(
-    signal, noise_amplitude, sampling_rate, lowcut, highcut, order=4
+def add_band_limited_white_noise(
+    signal, noise_amplitude=0.1, sampling_rate=100, lowcut=0.1, highcut=5, order=4, show=False
     ):
     # Generate white noise
     signal_sd = np.std(signal, ddof=1)
@@ -39,11 +49,15 @@ def band_limited_white_noise_nk2(
     b, a = butter(order, [lowcut, highcut], btype='band', fs=sampling_rate)
     
     _band_limited_noise = signal.lfilter(b, a, _noise)
-    
-    return _band_limited_noise
+    noisy_signal = _band_limited_noise + signal
 
-def impulsive_noise(
-    signal, noise_amplitude, rate=None, number=None
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Band-limited White Noise')
+
+    return noisy_signal
+
+def add_impulsive_noise(
+    signal, noise_amplitude=0.1, rate=None, number=None, show=False
 ):
     signal_sd = np.std(signal, ddof=1)
     amp = signal_sd * noise_amplitude
@@ -61,12 +75,16 @@ def impulsive_noise(
         return None
 
     impulsive_noise = np.random.choice([0, 1], size=num_samples, p=pob) * np.random.normal(0, amp, num_samples)
-    
-    return impulsive_noise
+    noisy_signal = impulsive_noise + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Impulsive Noise')
 
-def generate_burst_noise(signal, noise_amplitude, burst_num_max, burst_durations=[10, 50], burst_intervals=[100, 300]):
+    return noisy_signal
 
-    signal_length = len(signal_length)
+def add_burst_noise(
+        signal, noise_amplitude=0.1, burst_num_max=1, burst_durations=[10, 50], burst_intervals=[100, 300], show=False):
+
+    signal_length = len(signal)
 
     _noise = np.zeros(signal_length)
     signal_sd = np.std(signal, ddof=1)
@@ -86,11 +104,13 @@ def generate_burst_noise(signal, noise_amplitude, burst_num_max, burst_durations
         burst_start = burst_end + burst_interval
 
         _noise[burst_start: burst_end] += np.random.normal(0, amp)
-    
-    return _noise
+    noisy_signal = _noise + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Burst Noise')
 
+    return noisy_signal
 
-def spectral_density(frequency_range, Magnitude, noise_exponent):
+def spectral_density(frequency_range, magnitude=1, noise_exponent=1, show=False):
     """
     Calculate the spectral density of pink noise.
     
@@ -102,9 +122,10 @@ def spectral_density(frequency_range, Magnitude, noise_exponent):
     Returns:
         array: Spectral density values.
     """
-    return Magnitude / (frequency_range ** noise_exponent)
+    return magnitude / (frequency_range ** noise_exponent)
 
-def colored_noise(sampling_rate, duration, noise_max=1, model='pink'):
+def add_colored_noise(
+        sampling_rate=100, duration=10, noise_max=1, model=0, show=False):
     """
     Generate colored noise using the specified parameters.
     
@@ -114,23 +135,25 @@ def colored_noise(sampling_rate, duration, noise_max=1, model='pink'):
         Magnitude (float): Magnitude of the noise.
         noise_exponent (float): Exponent determining the slope of the spectral density.
         noise_max (float): Maximum desired amplitude of the colored noise.
-        
+        model(int): 0->'pink' 1->'brown'
     Returns:
         array: Generated colored noise signal.
     """
 
-    if model.lower() == 'pink':
+    if model == 0:
+        # pink
         noise_exponent = 1
-        Magnitude = 1
-    elif model.lower() in ['brown', 'brownian']:
+        magnitude = 1
+    elif model == 1:
+        # brown
         noise_exponent = 2
-        Magnitude = 1
+        magnitude = 1
 
     num_samples = int(sampling_rate * duration)
     frequency_range = np.fft.fftfreq(num_samples)[1: num_samples // 2]
     
     # Calculate spectral density using the provided function
-    _spectral_density = spectral_density(frequency_range, Magnitude, noise_exponent)
+    _spectral_density = spectral_density(frequency_range, magnitude, noise_exponent)
     
     # Generate random phases for each frequency component
     random_phases = np.random.uniform(0, 2 * np.pi, len(frequency_range))
@@ -144,17 +167,20 @@ def colored_noise(sampling_rate, duration, noise_max=1, model='pink'):
     # Scale the colored noise to achieve the desired maximum amplitude
     scaling = _colored_noise.max() / noise_max
     _colored_noise /= scaling
+    noisy_signal = _colored_noise + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Colored Noise')
+    return noisy_signal
 
-    return _colored_noise
 
-
-def flicker_noise(sampling_rate, duration, Magnitude=1, noise_exponent=1, noise_max=1):
+def add_flicker_noise(
+        signal, sampling_rate=100, duration=10, magnitude=1, noise_exponent=1, noise_max=1, show=False):
 
     num_samples = int(sampling_rate * duration)
     frequency_range = np.fft.fftfreq(num_samples)[1: num_samples // 2]
     
     # Calculate spectral density using the provided function
-    _spectral_density = spectral_density(frequency_range, Magnitude, noise_exponent)
+    _spectral_density = spectral_density(frequency_range, magnitude, noise_exponent)
     
     # Generate random phases for each frequency component
     random_phases = np.random.uniform(0, 2 * np.pi, len(frequency_range))
@@ -168,11 +194,14 @@ def flicker_noise(sampling_rate, duration, Magnitude=1, noise_exponent=1, noise_
     # Scale the flicker noise to achieve the desired maximum amplitude
     scaling = _flicker_noise.max() / noise_max
     _flicker_noise /= scaling
+    noisy_signal = _flicker_noise + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Flicker Noise')
+    return noisy_signal
 
-    return _flicker_noise
 
-
-def thermal_noise(sampling_rate, duration, Temperature, noise_max=1):
+def add_thermal_noise(
+        sampling_rate=100, duration=10, Temperature=100, noise_max=1, show=False):
 
     num_samples = int(sampling_rate * duration)
     frequency_range = np.fft.fftfreq(num_samples)[1: num_samples // 2]
@@ -193,12 +222,13 @@ def thermal_noise(sampling_rate, duration, Temperature, noise_max=1):
     # Scale the thermal noise to achieve the desired maximum amplitude
     scaling = _thermal_noise.max() / noise_max
     _thermal_noise /= scaling
+    noisy_signal = _thermal_noise + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Thermal Noise')
+    return noisy_signal
 
-    return _thermal_noise
-
-
-def powerline_noise(
-    signal, sampling_rate=100, duration=10, powerline_frequency=50, powerline_amplitude=0.1
+def add_powerline_noise(
+    signal, sampling_rate=100, duration=10, powerline_frequency=50, powerline_amplitude=0.1, show=False
 ):
     nyquist = sampling_rate * 0.5
     if powerline_frequency > nyquist:
@@ -211,10 +241,14 @@ def powerline_noise(
 
     powerline_amplitude *= signal_sd
     powerline_noise *= powerline_amplitude
+    noisy_signal = powerline_noise + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Powerline Noise')
+    return noisy_signal
 
-    return powerline_noise
-
-def add_echo(signal, n_echo, attenuation_factor, delay_factor):
+def add_echo_noise(
+        signal, n_echo=5, attenuation_factor=[0.5,0.4,0.3,0.2,0.1], delay_factor=[5]*5, show=False
+):
     if type(attenuation_factor) != list and type(attenuation_factor) != np.ndarray:
         raise ValueError("type of attenuation_factor must be list or numpy.ndarray")
     if type(delay_factor) != list and type(delay_factor) != np.ndarray:
@@ -226,13 +260,19 @@ def add_echo(signal, n_echo, attenuation_factor, delay_factor):
     original_signal = signal.copy()
     for a_factor, d_factory in zip(attenuation_factor, delay_factor):
         attenuation_signal = original_signal * a_factor
-        attenuation_signal[:-d_factory] = attenuation_signal[d_factory:]
-        attenuation_signal[-d_factory:] = 0
+        print(attenuation_signal[d_factory:].shape)
+        print(attenuation_signal[:-d_factory].shape)
+        attenuation_signal[d_factory:] = attenuation_signal[:-d_factory]
+        attenuation_signal[:d_factory] = 0
         original_signal += attenuation_signal
+    noisy_signal = original_signal + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Echo Noise')
+    return noisy_signal
 
-    return original_signal
-
-def click_noise(signal, noise_amplitude, n_click):
+def add_click_noise(
+        signal, noise_amplitude=0.1, n_click=5, show=False
+):
 
     signal_sd = np.std(signal, ddof=1)
     amp = signal_sd * noise_amplitude
@@ -240,41 +280,22 @@ def click_noise(signal, noise_amplitude, n_click):
     mask = np.zeros(len(signal))
     mask[noise_pos] = 1
     _click_noise = np.random.normal(0, amp, len(signal)) * mask
-
-    return _click_noise
+    noisy_signal = _click_noise + signal
+    if show:
+        plot_noise_signal(signal, noisy_signal, 'Add Click Noise')
+    return noisy_signal
 
 if __name__ == '__main__':
 
     from Dataset import load_scg
-    import matplotlib.pyplot as plt
 
     signals_clean, labels_clean, duration, fs = load_scg(0, 'train')
     signal = signals_clean[0]
 
     sampling_rate = fs
 
-    attenuation_factor = [0.9, 0.9]
+    attenuation_factor = [0.6, 0.3]
     delay_factor = [5, 10]
 
-    attenuated_signal = add_echo(signal, 2, attenuation_factor, delay_factor)
+    noisy_signal = add_echo_noise(signal, 2, attenuation_factor, delay_factor, show=True)
 
-    plt.subplots(2, 1, figsize=(12, 8))
-    plt.subplot(2, 1, 1)
-    plt.plot(signal)
-    plt.title("Original Clean Signal")
-
-    plt.subplot(2, 1, 2)
-    plt.plot(attenuated_signal)
-    plt.title("Signal with Echo and Multi-path Reflections")
-    plt.show()
-
-    plt.subplots(2, 1, figsize=(12, 8))
-    plt.subplot(2, 1, 1)
-    plt.plot(signal)
-    plt.title("Original Clean Signal")
-
-    plt.subplot(2, 1, 2)
-    plt.plot(signal + click_noise(signal, 1.5, 5))
-    plt.title("Signal with Click Noise")
-
-    plt.show()
