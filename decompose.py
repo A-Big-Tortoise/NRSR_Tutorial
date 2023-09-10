@@ -2,7 +2,7 @@ import numpy as np
 from PyEMD import EEMD, EMD
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
-from utils import plot_decomposed_components
+from Code.Tutorial.utils import plot_decomposed_components
 import matplotlib.pyplot as plt
 
 def standize_1D(signal):

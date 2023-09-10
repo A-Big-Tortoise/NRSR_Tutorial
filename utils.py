@@ -6,7 +6,7 @@ import pickle
 def calc_mae(gt, pred):
     return np.mean(abs(np.array(gt) - np.array(pred)))
 
-def plot_2vectors(label, pred, save=False, name=None):
+def plot_2vectors(label, pred, save=False, name=None, path=None):
     """lsit1: label, list2: prediction"""
 
     list1 = label
@@ -26,56 +26,34 @@ def plot_2vectors(label, pred, save=False, name=None):
     plt.legend(loc='lower right')
 
     if save:
-        if name is None:
-            raise ValueError("If save is True, 'name' argument must be provided.")
-        plt.savefig(f'{name}.jpg', dpi=300)
-        print(f'Saved plot to {name}.jpg')
+        if path is None:
+            raise ValueError("If save is True, 'path' argument must be provided.")
+        plt.savefig(f'{path}.jpg', dpi=300)
+        print(f'Saved plot to {path}.jpg')
 
     plt.show()
 
-    # mylist = Kshapes_template_test
-    # filepath = '../Data/NewTry/Kshapes_templates_0.1_3000_test.csv'
 
-    # def write_csv(mylist, filepath):
-    #     import csv
-    #     with open(filepath, 'w', newline='') as file:
-    #         writer = csv.writer(file)
-    #         writer.writerow(mylist)
+def ls2pkl(filepath, data):
+    with open(filepath, 'wb') as f:
+        pickle.dump(data, f)
 
-    # def write_csv(filepath):
-    #     import csv
-    #     with open(filepath, 'r') as file:
-    #         reader = csv.reader(file)
-    #         # for row in reader:
-    #             # row
-    #             # print(row)
-    #     return reader
+def pkl2ls(filepath):
+    with open(filepath, 'rb') as f:
+        data = pickle.load(f)
+    return data
 
-    # write_csv(mylist, filepath)
-    # new_kshapes_train = read_csv(filepath)
-    # with open(filepath, 'w', newline='') as file:
-    #     writer = csv.writer(file)
-    #     writer.writerow(mylist)
+def dic2pkl(filepath, data):
+    with open(filepath, 'wb') as f:
+        pickle.dump(data, f)
 
-    def ls2pkl(filepath, data):
-        with open(filepath, 'wb') as f:
-            pickle.dump(data, f)
-
-    def pkl2ls(filepath):
-        with open(filepath, 'rb') as f:
-            data = pickle.load(f)
-        return data
-
-    def dic2pkl(filepath, data):
-        with open(filepath, 'wb') as f:
-            pickle.dump(data, f)
-
-    def dicl2ls(filepath):
-        with open(filepath, 'rb') as f:
-            data = pickle.load(f)
-        return data
+def dicl2ls(filepath):
+    with open(filepath, 'rb') as f:
+        data = pickle.load(f)
+    return data
 
 def plot_noise_signal(original_signal, noisy_signal, title_name):
+    plt.figure()
     plt.plot(noisy_signal, label='Noisy Signal')
     plt.plot(original_signal, label='Original Signal')
     plt.title(title_name)
@@ -97,4 +75,12 @@ def plot_decomposed_components(signal, components, title_name):
         plt.plot(component, label='Component'+str(cnt+1))
         plt.legend()
 
+    plt.show()
+
+def plot_filtered_signal(filtered_signal, signal, title_name):
+    plt.figure()
+    plt.plot(signal, label='Original Signal', alpha=0.3)
+    plt.plot(filtered_signal, label='Filtered Signal')
+    plt.title(title_name)
+    plt.legend()
     plt.show()

@@ -6,7 +6,6 @@ def fft_denoise(signal, threshold):
 
     Parameters:
     signal (array-like): Input signal to be denoised.
-    fs (float): Sampling frequency of the signal.
     threshold (float): Threshold for filtering out noise.
 
     Returns:
