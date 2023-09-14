@@ -31,7 +31,6 @@ def sine_wave(duration=10, sampling_rate=100, amplitude=1, frequency=1, phase=0)
 
     return sine_wave
 
-
 def triangle_wave(duration=10, sampling_rate=100, amplitude=1, period=1):
     """
     Generate a triangle wave signal.
@@ -85,7 +84,6 @@ def square_wave(duration=10, sampling_rate=100, frequency=1):
 
     return square_wave
 
-
 def chirp_wave_linear(duration=10, sampling_rate=100, f0=0.1, c=1, phase=0):
     """
     Generate a linear chirp wave signal.
@@ -124,7 +122,6 @@ def chirp_wave_linear(duration=10, sampling_rate=100, f0=0.1, c=1, phase=0):
     chirp_wave_linear = np.sin(phase + 2 * np.pi * ((c / 2) * (time ** 2) + f0 * time))
 
     return chirp_wave_linear
-
 
 def chirp_wave_exponential(duration=10, sampling_rate=100, f0=0.1, k=2, phase=0):
     """
@@ -200,7 +197,6 @@ def chirp_wave_hyperbolic(duration=10, sampling_rate=100, f0=0.1, f1=5, phase=0)
         phase + 2 * np.pi * ((-1 * f0 * f1 * duration) / (f1 - f0) * np.log(1 - (f1 - f0) / (f1 * duration) * time)))
 
     return chirp_wave_hyperbolic
-
 
 def pulse_wave(duration=10, sampling_rate=100, amplitude=1, d=1, frequency=1, expansion=5):
     """
@@ -844,7 +840,6 @@ def emd_decomposition(signal, show=False):
 
     return imfs
 
-
 def eemd_decomposition(signal, noise_width=0.05, ensemble_size=100, show=False):
     """
     Perform Ensemble Empirical Mode Decomposition (EEMD) on a 1D signal.
@@ -876,7 +871,6 @@ def eemd_decomposition(signal, noise_width=0.05, ensemble_size=100, show=False):
         plot_decomposed_components(signal, imfs, 'EEMD')
 
     return imfs
-
 
 def vmd_decomposition(signal, K=5, alpha=2000, tau=0, DC=0, init=1, tol=1e-7, show=False):
     """
@@ -915,8 +909,6 @@ def vmd_decomposition(signal, K=5, alpha=2000, tau=0, DC=0, init=1, tol=1e-7, sh
         plot_decomposed_components(signal, u, 'VMD')
 
     return u
-
-
 
 def seasonal_decomposition(signal, period=100, model=0, show=False):
     """
@@ -1083,7 +1075,6 @@ def butter_highpass_filter(signal, cutoff=10, fs=100, order=5, show=False):
 
     return filtered_signal
 
-
 def simple_moving_average_filter(signal, length=10, show=False):
     """
     Apply a Simple Moving Average (SMA) filter to smooth the input signal.
@@ -1107,7 +1098,6 @@ def simple_moving_average_filter(signal, length=10, show=False):
         plot_filtered_signal(filtered_signal, signal, "Simple Moving Average Filter")
 
     return filtered_signal
-
 
 def exponential_moving_average_filter(signal, length=10, alpha=None, show=False):
     """
@@ -1141,7 +1131,6 @@ def exponential_moving_average_filter(signal, length=10, alpha=None, show=False)
 
     return filtered_signal
 
-
 def savgol_filter(signal, window_length=64, polyorder=1, show=False):
     """
     Apply a Savitzky-Golay filter to the input signal for smoothing.
@@ -1166,7 +1155,6 @@ def savgol_filter(signal, window_length=64, polyorder=1, show=False):
         plot_filtered_signal(filtered_signal, signal, "Savitzky-Golay Filter")
 
     return filtered_signal
-
 
 def wiener_filter(signal, noise, show=False):
     """
@@ -1208,6 +1196,18 @@ def wiener_filter(signal, noise, show=False):
     return filtered_signal
 
 if __name__ == '__main__':
+    # 1. help
+    # help add_white_noise
+
+    # 2. Use default parameters
+    # scg add_white_noise(signal=scg)
+
+    # 3. Use defined parameters
+    # scg add_white_noise(signal=scg,noise_amplitude=0.4,show=True)
+
+    # 4. input is function sequences
+    # scg add_white_noise(signal=scg,noise_amplitude=0.4,show=True) butter_bandpass_filter(signal=scg,show=True) eemd_decomposition(signal=scg,show=True)
+
     from Dataset import load_scg
 
     def check_arguments():
