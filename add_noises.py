@@ -2,7 +2,7 @@ import numpy as np
 from scipy.signal import butter
 # from sim_waves import sine_wave
 import copy
-from utils import plot_noise_signal
+from Code.Tutorial.utils import plot_noise_signal
 """
 可能潜藏着的问题：
 1. 生成的噪声是否需要考虑noise_freq和nosie_duration
@@ -260,8 +260,8 @@ def add_echo_noise(
     original_signal = signal.copy()
     for a_factor, d_factory in zip(attenuation_factor, delay_factor):
         attenuation_signal = original_signal * a_factor
-        print(attenuation_signal[d_factory:].shape)
-        print(attenuation_signal[:-d_factory].shape)
+        # print(attenuation_signal[d_factory:].shape)
+        # print(attenuation_signal[:-d_factory].shape)
         attenuation_signal[d_factory:] = attenuation_signal[:-d_factory]
         attenuation_signal[:d_factory] = 0
         original_signal += attenuation_signal

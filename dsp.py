@@ -3,64 +3,72 @@ import numpy as np
 # ==============================================================================
 # ------------------------------------Waves-------------------------------------
 # ==============================================================================
-def sine_wave(duration=10, sampling_rate=100, amplitude=1, frequency=1, phase=0):
+from utils import plot_sim_waves
+
+def sine_wave(duration=10, sampling_rate=100, amplitude=1, frequency=1, phase=0, show=False):
     """
     Generate a sine wave signal.
 
     Parameters:
     duration : float, optional
-        The duration (in seconds) of the generated sine wave signal.
+        The duration (in seconds) of the generated square wave signal.
     sampling_rate : int, optional
         The number of samples per second used for discretization.
-    amplitude : float, optional
+    amplitude : float
         The peak deviation of the function from zero.
-    frequency : float, optional
+    frequency : float
         The number of oscillations (cycles) that occur each second of time.
-    phase : float, optional
+    phase : float
         Phase specifies (in radians) where in its cycle the oscillation is at t = 0.
 
     Returns:
     sine_wave : array-like
-        An array containing the values of the sine wave signal.
-    """
-    # Generate a time array with evenly spaced values
-    time = np.linspace(0, duration, int(duration * sampling_rate))
+        An array containing the values of the sine wave signal at the given time points.
 
-    # Calculate the sine wave values based on the parameters
+    """
+    time = np.linspace(0, duration, duration * sampling_rate)
     sine_wave = amplitude * np.sin(2 * np.pi * frequency * time + phase)
+
+    if show:
+        plot_sim_waves(sine_wave, 'Sine Wave')
 
     return sine_wave
 
-def triangle_wave(duration=10, sampling_rate=100, amplitude=1, period=1):
+
+def triangle_wave(duration=10, sampling_rate=100, amplitude=1, period=2, show=False):
     """
     Generate a triangle wave signal.
 
     Parameters:
     duration : float, optional
-        The duration (in seconds) of the generated triangle wave signal.
+        The duration (in seconds) of the generated square wave signal.
     sampling_rate : int, optional
         The number of samples per second used for discretization.
-    amplitude : float, optional
-        The peak-to-peak amplitude of the triangle wave.
-    period : float, optional
-        The period (in seconds) of one full cycle of the triangle wave.
+    Amplitude : float
+        The amplitude of the triangle wave.
+    period : float
+        The period of the triangle wave.
 
     Returns:
     triangle_wave : array-like
-        An array containing the values of the triangle wave signal.
+        An array containing the values of the triangle wave signal at the given time points.
     """
-    # Generate a time array with evenly spaced values
-    time = np.linspace(0, duration, int(duration * sampling_rate))
 
+    time = np.linspace(0, duration, duration * sampling_rate)
     # Scale the time values to a normalized range [-1, 1] within each period
     t_scaled = 1 * np.abs(2 * (time / period - np.floor(time / period + 0.5))) - 1
 
     # Calculate the triangle wave values based on scaled time values
     triangle_wave = (3 * amplitude / period) * np.abs((t_scaled - period / 4) % period - period / 2) - amplitude
 
+    if show:
+        plot_sim_waves(triangle_wave, 'Triangle Wave')
+
     return triangle_wave
 
-def square_wave(duration=10, sampling_rate=100, frequency=1):
+
+
+def square_wave(duration=10, sampling_rate=100, frequency=1, show=False):
     """
     Generate a square wave signal.
 
@@ -69,22 +77,23 @@ def square_wave(duration=10, sampling_rate=100, frequency=1):
         The duration (in seconds) of the generated square wave signal.
     sampling_rate : int, optional
         The number of samples per second used for discretization.
-    frequency : float, optional
-        The frequency (in Hertz) of the square wave.
+    frequency : float
+        The frequency of the square wave.
 
     Returns:
     square_wave : array-like
-        An array containing the values of the square wave signal.
+        An array containing the values of the square wave signal at the given time points.
     """
-    # Generate a time array with evenly spaced values
-    time = np.linspace(0, duration, int(duration * sampling_rate))
-
-    # Calculate the square wave values based on the frequency and time values
+    time = np.linspace(0, duration, duration * sampling_rate)
     square_wave = 2 * (2 * np.floor(frequency * time) - np.floor(2 * frequency * time)) + 1
+
+    if show:
+        plot_sim_waves(square_wave, 'Square Wave')
 
     return square_wave
 
-def chirp_wave_linear(duration=10, sampling_rate=100, f0=0.1, c=1, phase=0):
+
+def chirp_wave_linear(duration=10, sampling_rate=100, f0=1, c=1, phase=0, show=False):
     """
     Generate a linear chirp wave signal.
 
@@ -93,19 +102,18 @@ def chirp_wave_linear(duration=10, sampling_rate=100, f0=0.1, c=1, phase=0):
         The duration (in seconds) of the generated linear chirp wave signal.
     sampling_rate : int, optional
         The number of samples per second used for discretization.
-    f0 : float, optional
+    f0 : float
         Initial frequency of the chirp.
-    c : float, optional
+    c : float
         Chirp rate (slope) in Hertz/second.
-    phase : float, optional
+    phase : float
         Phase offset of the chirp.
 
     Returns:
-    chirp_wave_linear : array-like
-        An array containing the values of the linear chirp wave signal.
+    chrip_wave_linear : array-like
+        An array containing the values of the linear chirp wave signal at the given time points.
     """
-    # Generate a time array with evenly spaced values
-    time = np.linspace(0, duration, int(duration * sampling_rate))
+    time = np.linspace(0, duration, duration * sampling_rate)
 
     # Calculate the final frequency of the chirp
     f1 = c * duration + f0
@@ -118,12 +126,16 @@ def chirp_wave_linear(duration=10, sampling_rate=100, f0=0.1, c=1, phase=0):
         raise ValueError(
             f"Sampling rate is {sampling_rate} and Initial Frequency is {f0} and Final Frequency {f1}. Nyquist Error!")
 
-    # Generate the linear chirp wave signal based on the parameters
-    chirp_wave_linear = np.sin(phase + 2 * np.pi * ((c / 2) * (time ** 2) + f0 * time))
+    chirp_wave = np.sin(phase + 2 * np.pi * ((c / 2) * (time ** 2) + f0 * time))
 
-    return chirp_wave_linear
+    if show:
+        plot_sim_waves(chirp_wave, 'Chirp Wave Linear')
 
-def chirp_wave_exponential(duration=10, sampling_rate=100, f0=0.1, k=2, phase=0):
+    return chirp_wave
+
+
+
+def chirp_wave_exponential(duration=10, sampling_rate=100, f0=1, k=1.2, phase=0, show=False):
     """
     Generate an exponential chirp wave signal.
 
@@ -132,19 +144,18 @@ def chirp_wave_exponential(duration=10, sampling_rate=100, f0=0.1, k=2, phase=0)
         The duration (in seconds) of the generated exponential chirp wave signal.
     sampling_rate : int, optional
         The number of samples per second used for discretization.
-    f0 : float, optional
+    f0 : float
         Initial frequency of the chirp.
-    k : float, optional
+    k : float
         Exponential growth factor.
-    phase : float, optional
+    phase : float
         Phase offset of the chirp.
 
     Returns:
     chirp_wave_exponential : array-like
-        An array containing the values of the exponential chirp wave signal.
+        An array containing the values of the exponential chirp wave signal at the given time points.
     """
-    # Generate a time array with evenly spaced values
-    time = np.linspace(0, duration, int(duration * sampling_rate))
+    time = np.linspace(0, duration, duration * sampling_rate)
 
     # Calculate the final frequency of the exponential chirp
     f1 = f0 * (k ** duration - 1)
@@ -158,11 +169,15 @@ def chirp_wave_exponential(duration=10, sampling_rate=100, f0=0.1, k=2, phase=0)
             f"Sampling rate is {sampling_rate} and Initial Frequency is {f0} and Final Frequency {f1}. Nyquist Error!")
 
     # Generate the exponential chirp wave signal based on the parameters
-    chirp_wave_exponential = np.sin(phase + 2 * np.pi * f0 * ((k ** time - 1) / np.log(k)))
+    chirp_wave = np.sin(phase + 2 * np.pi * f0 * ((k ** time - 1) / np.log(k)))
 
-    return chirp_wave_exponential
+    if show:
+        plot_sim_waves(chirp_wave, 'Chirp Wave Exponential')
 
-def chirp_wave_hyperbolic(duration=10, sampling_rate=100, f0=0.1, f1=5, phase=0):
+    return chirp_wave
+
+
+def chirp_wave_hyperbolic(duration=10, sampling_rate=100, f0=1, f1=10, phase=0, show=False):
     """
     Generate a hyperbolic chirp wave signal.
 
@@ -171,19 +186,20 @@ def chirp_wave_hyperbolic(duration=10, sampling_rate=100, f0=0.1, f1=5, phase=0)
         The duration (in seconds) of the generated hyperbolic chirp wave signal.
     sampling_rate : int, optional
         The number of samples per second used for discretization.
-    f0 : float, optional
+    f0 : float
         Initial frequency of the chirp.
-    f1 : float, optional
+    f1 : float
         Final frequency of the chirp.
-    phase : float, optional
+    duration : float
+        Duration of the chirp.
+    phase : float
         Phase offset of the chirp.
 
     Returns:
     chirp_wave_hyperbolic : array-like
-        An array containing the values of the hyperbolic chirp wave signal.
+        An array containing the values of the hyperbolic chirp wave signal at the given time points.
     """
-    # Generate a time array with evenly spaced values
-    time = np.linspace(0, duration, int(duration * sampling_rate))
+    time = np.linspace(0, duration, duration * sampling_rate)
 
     # Check for valid frequencies and Nyquist conditions
     if f0 <= 0 or f1 <= 0:
@@ -192,13 +208,14 @@ def chirp_wave_hyperbolic(duration=10, sampling_rate=100, f0=0.1, f1=5, phase=0)
     if sampling_rate / 2 <= f0 or sampling_rate / 2 <= f1:
         raise ValueError(f"Sampling rate is {sampling_rate} and Initial Frequency is {f0} and Final Frequency {f1}. Nyquist Error!")
 
-    # Generate the hyperbolic chirp wave signal based on the parameters
-    chirp_wave_hyperbolic = np.sin(
-        phase + 2 * np.pi * ((-1 * f0 * f1 * duration) / (f1 - f0) * np.log(1 - (f1 - f0) / (f1 * duration) * time)))
+    chirp_wave = np.sin(phase + 2 * np.pi * ((-1 * f0 * f1 * time) / (f1 - f0) * np.log(1 - (f1 - f0) / (f1 * time) * time)))
 
-    return chirp_wave_hyperbolic
+    if show:
+        plot_sim_waves(chirp_wave, 'Chirp Wave Hyperbolic')
 
-def pulse_wave(duration=10, sampling_rate=100, amplitude=1, d=1, frequency=1, expansion=5):
+    return chirp_wave
+
+def pulse_wave(duration=10, sampling_rate=100, amplitude=1, d=0.5, frequency=1, expansion=5, show=False):
     """
     Generate a pulse wave signal.
 
@@ -207,35 +224,35 @@ def pulse_wave(duration=10, sampling_rate=100, amplitude=1, d=1, frequency=1, ex
         The duration (in seconds) of the generated pulse wave signal.
     sampling_rate : int, optional
         The number of samples per second used for discretization.
-    amplitude : float, optional
+    amplitude : float
         The amplitude of the pulse wave.
-    d : float, optional
+    d : float
         Width of the pulse.
-    frequency : float, optional
+    frequency : float
         The frequency of the pulse wave.
-    expansion : int, optional
+    expansion : int
         The number of terms used in the expansion for generating the pulse wave.
 
     Returns:
     pulse_wave : array-like
-        An array containing the values of the pulse wave signal.
+        An array containing the values of the pulse wave signal at the given time points.
     """
-    # Generate a time array with evenly spaced values
-    time = np.linspace(0, duration, int(duration * sampling_rate))
+    time = np.linspace(0, duration, duration * sampling_rate)
+
+    sum_of_ = 0
 
     # Check for Nyquist condition
     if sampling_rate / 2 <= frequency:
         raise ValueError(f"Sampling rate is {sampling_rate} and Frequency is {frequency}. Nyquist Error!")
 
-    # Initialize the sum variable for the pulse wave expansion
-    sum_of_terms = 0
-
-    # Calculate the pulse wave signal based on the expansion
-    for n in range(1, expansion + 1):
-        sum_of_terms += np.sinc(n * d) * np.cos(2 * np.pi * n * frequency * time)
+    for n in range(1, expansion+1):
+        sum_of_ += np.sinc(n * d) * np.cos(2 * np.pi * n * frequency * time)
 
     # Calculate the final pulse wave signal
-    pulse_wave = amplitude * d * (1 + 2 * sum_of_terms)
+    pulse_wave = amplitude * d * (1 + 2 * sum_of_)
+
+    if show:
+        plot_sim_waves(pulse_wave, 'Pulse Wave')
 
     return pulse_wave
 
@@ -806,7 +823,7 @@ def add_click_noise(
 from PyEMD import EEMD, EMD
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
-from Code.Tutorial.utils import plot_decomposed_components
+from utils import plot_decomposed_components
 import matplotlib.pyplot as plt
 
 def standize_1D(signal):
@@ -969,7 +986,7 @@ def seasonal_decomposition(signal, period=100, model=0, show=False):
 # ==============================================================================
 import scipy.signal
 from scipy.signal import butter, lfilter
-from Code.Tutorial.utils import plot_filtered_signal
+from utils import plot_filtered_signal
 
 def butter_bandpass_filter(signal, lowcut=1, highcut=10, fs=100, order=5, show=False):
     """
@@ -1208,16 +1225,28 @@ if __name__ == '__main__':
     # 4. input is function sequences
     # scg add_white_noise(signal=scg,noise_amplitude=0.4,show=True) butter_bandpass_filter(signal=scg,show=True) eemd_decomposition(signal=scg,show=True)
 
+    # 5. create wave
+    # create sine_wave(amplitude=1,frequency=1,show=True)
+
+    # 6. create complex wave
+    # create sine_wave(amplitude=1,frequency=1,show=True)+square_wave(show=True)
+
+    # 7. use created waves as input
+    # create sine_wave(amplitude=1,frequency=1,show=True)+square_wave(show=True) add_white_noise(signal=scg,noise_amplitude=0.2,show=True)
+
+    # 8. use created waves as input
+    # create sine_wave(amplitude=1,frequency=1,show=True)+sine_wave(amplitude=2,frequency=2,show=True) add_white_noise(signal=scg,noise_amplitude=0.2,show=True) eemd_decomposition(signal=scg,show=True)
+
     from Dataset import load_scg
 
     def check_arguments():
         pass
 
     def get_params(func_sequence, pattern = r'\((.*?)\)'):
+        # func_sequence: ['func1(a=1,b=4)', 'func1(a=2,b=2)', 'func2(a=1,b=3)', 'func2(a=1,b=3)']
         import re
 
-        params = {}
-        # for input_str in func_sequence.split():
+        params = []
         for input_str in func_sequence:
             print(input_str)
             match = re.search(pattern, input_str)
@@ -1237,20 +1266,11 @@ if __name__ == '__main__':
                         if paramters_splits[0] == 'show':
                             parameters_dic[paramters_splits[0]] = True if paramters_splits[-1] == 'true' else False
                             continue
-                        # print(paramters_splits[-1])
                         parameters_dic[paramters_splits[0]] = float(paramters_splits[-1])
-                params[input_str.split('(')[0]] = parameters_dic
+                params.append([input_str.split('(')[0], parameters_dic])
             else:
-                params[input_str] = None
+                params.append([input_str.split('(')[0], None])
         return params
-
-    def check_data_source(data_source):
-        data_sources = ['scg']
-        if data_source in data_sources:
-            return True
-        else:
-            print(data_source, data_sources)
-            return False
 
     def check_callable(func_name):
         func = globals()[func_name]
@@ -1261,20 +1281,46 @@ if __name__ == '__main__':
             print(f"")
             return False
 
-    def load_data(data_source):
-        # it is an easy implement
-        signals_train, labels_train, duration, fs = load_scg(0.1, 'train')
+    def load_scg_data():
+        signals_train, labels_train, duration, fs =  load_scg(0.1, 'train')
         return signals_train[0]
 
-    def check_func_types(funcname_params):
-        transformers= []
-        estimators = []
-        pass
+    def load_create_data(func_sequence_str):
+        func_sequence = func_sequence_str.split('+')
+        funcname_params = get_params(func_sequence)
+        middle_res = np.zeros(1000)
 
+        # iterate dic
+        for func_name, params in funcname_params:
+            if not check_callable(func_name):
+                break
+            func = globals()[func_name]
+            middle_res += func(**params)
+
+        plt.figure()
+        plt.plot(middle_res, label='Created Signal')
+        plt.title('Created Wave')
+        plt.legend()
+        plt.show()
+        return middle_res
+
+    def check_and_load_data(inputs):
+        data_sources = ['scg', 'create']
+        middle_res = None
+        func_seq_start = -1
+
+        if inputs[0] not in data_sources:
+            return None, None
+        elif inputs[0] == 'scg':
+            middle_res = load_scg_data()
+            func_seq_start = 1
+        elif inputs[0] == 'create':
+            middle_res = load_create_data(inputs[1])
+            func_seq_start = 2
+        return middle_res, func_seq_start
 
     while True:
-
-        inputs = input("Enter Your Command: ").lower().split(' ')
+        inputs = input("Enter your command: ").lower().split(' ')
 
         # quit
         if inputs[0] in ['q', 'quit']:
@@ -1295,33 +1341,14 @@ if __name__ == '__main__':
             pass
 
         middle_res = None
+        func_seq_start = 1
 
-        if not check_data_source(inputs[0]):
-            print(inputs[0])
-            print('data source error')
-            continue
-            # break
-        else:
-            data_source = inputs[0]
-            middle_res = load_data(data_source)
+        middle_res, func_seq_start = check_and_load_data(inputs)
 
-        funcname_params = get_params(inputs[1:])
-
-        # if not check_func_types(funcname_params):
-        #     print('func type error')
-        #     continue
-            # break
+        funcname_params = get_params(inputs[func_seq_start:])
 
         # iterate dic
-        for func_name, params in funcname_params.items():
-            """
-            # 1. def data_source = ['scg'] and check data source
-            # 2. get {func_name->str, {parameter_1->str: para_1->str / number}} & check if all parameters follow the Key Word arguments
-            # 3. check if func_name is callable
-            # 4. check if all parameters as same as the functions' parameters name
-            6. check if the next function can accept the output of the previous function as the input
-            """
-
+        for func_name, params in funcname_params:
             if not check_callable(func_name):
                 break
             print(f'Function Name: {func_name}')
@@ -1332,4 +1359,3 @@ if __name__ == '__main__':
             print(f'Output shape of Function: {middle_res.shape}')
             print()
             # print(middle_res)
-#

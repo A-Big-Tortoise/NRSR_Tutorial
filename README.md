@@ -50,9 +50,9 @@
 |                           | Extended Kalman Filter (EFK)        |           |          |
 |                           | Unscented Kalman Filter (UFK)       |           |          |
 |                           | Sample Adaptive Filters (LMS & RLS) | &#10004;  |          |
-| Savgol Filters            | Savgol Filters                      | &#10004;  |          |
-| Wiener Filters            | Wiener Filters                      | &#10004;  |          |
-| Matched Filters           | Matched Filters                     |           |          |
+| Savgol Filters            | Savgol Filters                      | &#10004;  | &#10004; |
+| Wiener Filters            | Wiener Filters                      | &#10004;  | &#10004; |
+| Matched Filters           | Matched Filters                     | &#10004;  | &#10004; |
 | Wavelet denoising         | Wavelet denoising                   | &#10004;  | &#10004; |
 | FFT denoising             | FFT denoising                       | &#10004;  | &#10004; |
 | PCA-based noise reduction | PCA-based noise reduction           | &#10004;  | &#10004; |

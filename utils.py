@@ -84,3 +84,10 @@ def plot_filtered_signal(filtered_signal, signal, title_name):
     plt.title(title_name)
     plt.legend()
     plt.show()
+
+def plot_sim_waves(signal, wave_name):
+    plt.figure()
+    plt.plot(signal, label=wave_name)
+    plt.title('Generated Wave')
+    plt.legend()
+    plt.show()
