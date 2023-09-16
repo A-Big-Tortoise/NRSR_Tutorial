@@ -1319,6 +1319,7 @@ if __name__ == '__main__':
             func_seq_start = 2
         return middle_res, func_seq_start
 
+    middle_res = None
     while True:
         inputs = input("Enter your command: ").lower().split(' ')
 
@@ -1338,9 +1339,18 @@ if __name__ == '__main__':
             continue
 
         if inputs[0] in ['s', 'save']:
-            pass
+            file_path = inputs[1]
+            default_path = os.path.join('data')
+            if middle_res is None:
+                print('There is nothing needed to save!')
+            else:
+                if os.path.exists(file_path):
+                    final_path = file_path
+                else:
+                    final_path = default_path
+                np.save(final_path, middle_res)
+            continue
 
-        middle_res = None
         func_seq_start = 1
 
         middle_res, func_seq_start = check_and_load_data(inputs)
