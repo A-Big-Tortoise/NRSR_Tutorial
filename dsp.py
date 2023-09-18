@@ -1319,6 +1319,7 @@ if __name__ == '__main__':
             func_seq_start = 2
         return middle_res, func_seq_start
 
+
     middle_res = None
     while True:
         inputs = input("Enter your command: ").lower().split(' ')
