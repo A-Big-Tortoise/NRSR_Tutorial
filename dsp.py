@@ -1225,19 +1225,24 @@ if __name__ == '__main__':
     # 4. input is function sequences
     # scg add_white_noise(signal=scg,noise_amplitude=0.4,show=True) butter_bandpass_filter(signal=scg,show=True) eemd_decomposition(signal=scg,show=True)
 
-    # 5. create wave
+    # -------------------------------------------------------------------------------------------
+    # 5. create simple wave
     # create sine_wave(amplitude=1,frequency=1,show=True)
 
     # 6. create complex wave
     # create sine_wave(amplitude=1,frequency=1,show=True)+square_wave(show=True)
 
-    # 7. use created waves as input
-    # create sine_wave(amplitude=1,frequency=1,show=True)+square_wave(show=True) add_white_noise(signal=scg,noise_amplitude=0.2,show=True)
+    # 7. add some noises to created waves
+    # create sine_wave(amplitude=1,frequency=1,show=True)+sine_wave(amplitude=2,frequency=2,show=True) add_white_noise(signal=scg,noise_amplitude=0.2,show=True)
 
-    # 8. use created waves as input
+    # 8. use created waves as input to the algorithm
     # create sine_wave(amplitude=1,frequency=1,show=True)+sine_wave(amplitude=2,frequency=2,show=True) add_white_noise(signal=scg,noise_amplitude=0.2,show=True) eemd_decomposition(signal=scg,show=True)
 
+    # 9. save the data
+    # save ./data
+
     from Dataset import load_scg
+    import os
 
     def check_arguments():
         pass

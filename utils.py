@@ -91,3 +91,22 @@ def plot_sim_waves(signal, wave_name):
     plt.title('Generated Wave')
     plt.legend()
     plt.show()
+
+def plot_adp_filtered_signal(y, d_signal, error):
+    plt.figure()
+
+    plt.subplot(211)
+    plt.title("Adaptation")
+    plt.xlabel("samples - k")
+    plt.plot(d_signal, "b", label="d_signal - target")
+    plt.plot(y, "g", label="output")
+    plt.legend()
+
+    plt.subplot(212)
+    plt.title("Filter error")
+    plt.xlabel("samples - k")
+    plt.plot(10 * np.log10(error ** 2), "r", label="error [dB]")
+    plt.legend()
+
+    plt.tight_layout()
+    plt.show()
