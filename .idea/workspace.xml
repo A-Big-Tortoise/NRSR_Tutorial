@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4041f1b4-5b94-4489-8737-9e2c5cf84252" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Notes/Kalman Filter.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notes/Kalman Filter.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notes/Kalman Filter.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Week8/Reason_0.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_0.jpg" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_1.jpg" beforeDir="false" />
@@ -107,7 +106,7 @@
       <updated>1693139971432</updated>
       <workItem from="1693139978087" duration="102000" />
       <workItem from="1693378662566" duration="358000" />
-      <workItem from="1697457228617" duration="2739000" />
+      <workItem from="1697457228617" duration="7757000" />
     </task>
     <servers />
   </component>
