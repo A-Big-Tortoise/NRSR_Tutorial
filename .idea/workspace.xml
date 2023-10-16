@@ -5,17 +5,81 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4041f1b4-5b94-4489-8737-9e2c5cf84252" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Notes/Kalman Filter.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/draft.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/draft.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/Reason_0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_0.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_1.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_10.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_11.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_12.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_13.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_2.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_3.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_5.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_6.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_7.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_9.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_10.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_11.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_12.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_13.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_14.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_15.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_16.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_17.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_18.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_19.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_20.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_21.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_22.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_23.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_24.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_25.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_26.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_27.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_28.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_29.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_30.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_31.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_32.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_33.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_34.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_by_Period.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Week8/pic/Time_warping.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/Derivative Dynamic Time Warping.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/KShape.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/Weighted dynamic time warping for time series classification.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/shapeDTW shape Dynamic Time Warping.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/A Robust Heart Sounds Segmentation Module Based on S-Transform.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/A supervised machine learning semantic.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/An Experimental Method for Bio-Signal Denoising Using.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Automatic segmentation of long-term ECG signals corrupted.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Complex study on compression .pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Novel Signal Noise Reduction Method through Cluster Analysis.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Segmentation and Optimal Region Selection of.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Segmentation, alignment and statistical.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Noise Reduction/Noise reduction for periodic signals using high-resolution frequency analysis.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Noise Reduction/Review of noise removal techniques in ECG signals.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Noise Reduction/Signal Processing Techniques for Removing Noise from ECG Signals.pdf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Jupyter Notebook" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -43,7 +107,19 @@
       <updated>1693139971432</updated>
       <workItem from="1693139978087" duration="102000" />
       <workItem from="1693378662566" duration="358000" />
+      <workItem from="1697457228617" duration="2739000" />
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
