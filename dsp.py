@@ -3,7 +3,7 @@ import numpy as np
 # ==============================================================================
 # ------------------------------------Waves-------------------------------------
 # ==============================================================================
-from utils import plot_sim_waves
+from Tutorial.utils import plot_sim_waves
 
 def sine_wave(duration=10, sampling_rate=100, amplitude=1, frequency=1, phase=0, show=False):
     """
@@ -262,7 +262,7 @@ def pulse_wave(duration=10, sampling_rate=100, amplitude=1, d=0.5, frequency=1, 
 # ==============================================================================
 from scipy.signal import butter
 from sim_waves import sine_wave
-from utils import plot_noise_signal
+from Tutorial.utils import plot_noise_signal
 
 def add_white_noise(signal, noise_amplitude=0.1, model=0, show=False):
     """
@@ -701,7 +701,8 @@ def add_powerline_noise(
     time = np.linspace(0, duration, int(duration * sampling_rate))
 
     # Generate the powerline noise as a sine wave
-    powerline_noise = sine_wave(time=time, Amplitude=1, frequency=powerline_frequency, phase=0)
+    powerline_noise = sine_wave(duration=duration, sampling_rate=sampling_rate, amplitude=1, frequency=powerline_frequency, phase=0)
+
 
     # Scale the amplitude of the powerline noise
     powerline_amplitude *= signal_sd
@@ -823,7 +824,7 @@ def add_click_noise(
 from PyEMD import EEMD, EMD
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
-from utils import plot_decomposed_components
+from Tutorial.utils import plot_decomposed_components
 import matplotlib.pyplot as plt
 
 def standize_1D(signal):
@@ -986,7 +987,7 @@ def seasonal_decomposition(signal, period=100, model=0, show=False):
 # ==============================================================================
 import scipy.signal
 from scipy.signal import butter, lfilter
-from utils import plot_filtered_signal
+from Tutorial.utils import plot_filtered_signal
 
 def butter_bandpass_filter(signal, lowcut=1, highcut=10, fs=100, order=5, show=False):
     """
@@ -1241,7 +1242,7 @@ if __name__ == '__main__':
     # 9. save the data
     # save ./data
 
-    from Dataset import load_scg
+    from Tutorial.Dataset import load_scg
     import os
 
     def check_arguments():

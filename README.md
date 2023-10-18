@@ -46,10 +46,11 @@
 |                           | Highpass                            | &#10004;  | &#10004; |
 |                           | Simple Moving Average               | &#10004;  | &#10004; |
 |                           | Exponential Moving Average          | &#10004;  | &#10004; |
-| Adaptive Filters          | State-space Kalman Filters          |           |          |
+| Adaptive Filters          | Kalman Filters                      |           |          |
 |                           | Extended Kalman Filter (EFK)        |           |          |
 |                           | Unscented Kalman Filter (UFK)       |           |          |
 |                           | Sample Adaptive Filters (LMS & RLS) | &#10004;  |          |
+| Particle Filters          | Particle Filter                     |           |          |
 | Savgol Filters            | Savgol Filters                      | &#10004;  | &#10004; |
 | Wiener Filters            | Wiener Filters                      | &#10004;  | &#10004; |
 | Matched Filters           | Matched Filters                     | &#10004;  | &#10004; |

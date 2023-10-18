@@ -1,8 +1,9 @@
 import numpy as np
 from scipy.signal import butter
-# from sim_waves import sine_wave
+from sim_waves import sine_wave
 import copy
-from Code.Tutorial.utils import plot_noise_signal
+from Tutorial.utils import plot_noise_signal
+
 """
 可能潜藏着的问题：
 1. 生成的噪声是否需要考虑noise_freq和nosie_duration
@@ -237,7 +238,7 @@ def add_powerline_noise(
     signal_sd = np.std(signal, ddof=1)
     time = np.linsapce(0, duration, duration * sampling_rate)
 
-    powerline_noise = sine_wave(time=time, Amplitude=1, frequency=powerline_frequency, phase=0)
+    powerline_noise = sine_wave(duration=duration, sampling_rate=sampling_rate, amplitude=1, frequency=powerline_frequency, phase=0)
 
     powerline_amplitude *= signal_sd
     powerline_noise *= powerline_amplitude

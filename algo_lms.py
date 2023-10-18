@@ -1,5 +1,5 @@
 import padasip as pa
-from utils import plot_adp_filtered_signal
+from Tutorial.utils import plot_adp_filtered_signal
 import numpy as np
 
 def algo_lms(signal, d_signal, mu=0.1, w="random", show=False):
