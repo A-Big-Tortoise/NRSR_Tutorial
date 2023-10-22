@@ -1,8 +1,9 @@
 import numpy as np
-from PyEMD import EEMD, EMD
+from PyEMD import EEMD, EMD, CEEMDAN
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
-from Tutorial.utils import plot_decomposed_components
+# from Tutorial.utils import plot_decomposed_components
+from utils import plot_decomposed_components
 import matplotlib.pyplot as plt
 
 def standize_1D(signal):
@@ -22,6 +23,14 @@ def eemd_decomposition(signal, noise_width=0.05, ensemble_size=100, show=False):
     imfs = eemd.eemd(signal)
     if show:
         plot_decomposed_components(signal, imfs, 'EEMD')
+    return imfs
+
+def ceemd_decomposition(signal, show=False):
+    signal = standize_1D(signal)
+    ceemdan = CEEMDAN()
+    imfs = ceemdan.ceemdan(signal)
+    if show:
+        plot_decomposed_components(signal, imfs, 'CEEMD')
     return imfs
 
 def vmd_decomposition(signal, K=5, alpha=2000, tau=0, DC=0, init=1, tol=1e-7, show=False):
@@ -93,6 +102,7 @@ if __name__ == '__main__':
     seasonal_decomposition(signal, show=True)
     emd_decomposition(signal, show=True)
     eemd_decomposition(signal, show=True)
+    ceemd_decomposition(signal, show=True)
     vmd_decomposition(signal, show=True)
 
 # if __name__ == '__main__':

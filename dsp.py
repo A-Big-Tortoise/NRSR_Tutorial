@@ -1,9 +1,18 @@
 import numpy as np
-
+from scipy.signal import butter
+from sim_waves import sine_wave
+from PyEMD import EEMD, EMD, CEEMDAN
+from vmdpy import VMD
+from statsmodels.tsa.seasonal import seasonal_decompose
+import matplotlib.pyplot as plt
+import scipy.signal
+from scipy.signal import butter, lfilter
+from utils import plot_sim_waves, plot_noise_signal, plot_decomposed_components, plot_filtered_signal
+from Dataset import load_scg
+import os
 # ==============================================================================
 # ------------------------------------Waves-------------------------------------
 # ==============================================================================
-from Tutorial.utils import plot_sim_waves
 
 def sine_wave(duration=10, sampling_rate=100, amplitude=1, frequency=1, phase=0, show=False):
     """
@@ -260,9 +269,7 @@ def pulse_wave(duration=10, sampling_rate=100, amplitude=1, d=0.5, frequency=1, 
 # ==============================================================================
 # ------------------------------------Noise-------------------------------------
 # ==============================================================================
-from scipy.signal import butter
-from sim_waves import sine_wave
-from Tutorial.utils import plot_noise_signal
+
 
 def add_white_noise(signal, noise_amplitude=0.1, model=0, show=False):
     """
@@ -821,11 +828,7 @@ def add_click_noise(
 # ==============================================================================
 # ------------------------------------Noise-------------------------------------
 # ==============================================================================
-from PyEMD import EEMD, EMD
-from vmdpy import VMD
-from statsmodels.tsa.seasonal import seasonal_decompose
-from Tutorial.utils import plot_decomposed_components
-import matplotlib.pyplot as plt
+
 
 def standize_1D(signal):
     return (signal - signal.mean()) / signal.std()
@@ -889,6 +892,36 @@ def eemd_decomposition(signal, noise_width=0.05, ensemble_size=100, show=False):
         plot_decomposed_components(signal, imfs, 'EEMD')
 
     return imfs
+
+def ceemd_decomposition(signal, show=False):
+    """
+    Perform Complete Ensemble Empirical Mode Decomposition with Adaptive Noise (CEEMDAN) on a 1D signal.
+
+    Parameters:
+    signal : array-like
+        The input signal to be decomposed using CEEMDAN.
+    show : bool, optional
+        Whether to display a plot of the decomposed components.
+
+    Returns:
+    imfs : list
+        A list of Intrinsic Mode Functions (IMFs) obtained from CEEMDAN decomposition.
+    """
+    # Preprocess the input signal (e.g., standardize or denoise if necessary)
+    signal = standize_1D(signal)
+
+    # Create an instance of the CEEMDAN class
+    ceemdan = CEEMDAN()
+
+    # Perform CEEMDAN decomposition on the preprocessed signal to obtain IMFs
+    imfs = ceemdan.ceemdan(signal)
+
+    if show:
+        plot_decomposed_components(signal, imfs, 'CEEMDAN')
+
+    # Return the resulting IMFs
+    return imfs
+
 
 def vmd_decomposition(signal, K=5, alpha=2000, tau=0, DC=0, init=1, tol=1e-7, show=False):
     """
@@ -985,9 +1018,7 @@ def seasonal_decomposition(signal, period=100, model=0, show=False):
 # ==============================================================================
 # ------------------------------------Filter-------------------------------------
 # ==============================================================================
-import scipy.signal
-from scipy.signal import butter, lfilter
-from Tutorial.utils import plot_filtered_signal
+
 
 def butter_bandpass_filter(signal, lowcut=1, highcut=10, fs=100, order=5, show=False):
     """
@@ -1242,8 +1273,6 @@ if __name__ == '__main__':
     # 9. save the data
     # save ./data
 
-    from Tutorial.Dataset import load_scg
-    import os
 
     def check_arguments():
         pass

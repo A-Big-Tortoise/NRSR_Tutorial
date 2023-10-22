@@ -5,63 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4041f1b4-5b94-4489-8737-9e2c5cf84252" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../Week8/Reason_0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_0.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_1.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_10.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_11.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_12.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_13.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_3.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_5.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_6.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_7.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Reason_9.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_10.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_11.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_12.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_13.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_14.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_15.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_16.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_17.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_18.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_19.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_20.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_21.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_22.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_23.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_24.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_25.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_26.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_27.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_28.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_29.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_30.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_31.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_32.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_33.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_34.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Segmentation_by_Period.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Week8/pic/Time_warping.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/Derivative Dynamic Time Warping.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/KShape.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/Weighted dynamic time warping for time series classification.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/DTW/shapeDTW shape Dynamic Time Warping.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/A Robust Heart Sounds Segmentation Module Based on S-Transform.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/A supervised machine learning semantic.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/An Experimental Method for Bio-Signal Denoising Using.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Automatic segmentation of long-term ECG signals corrupted.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Complex study on compression .pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Novel Signal Noise Reduction Method through Cluster Analysis.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Segmentation and Optimal Region Selection of.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get_Template/Segmentation, alignment and statistical.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Noise Reduction/Noise reduction for periodic signals using high-resolution frequency analysis.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Noise Reduction/Review of noise removal techniques in ECG signals.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Noise Reduction/Signal Processing Techniques for Removing Noise from ECG Signals.pdf" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Decompose/EMDs.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Notes/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Tutorial.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tutorial.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Notes/DWT.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notes/DWT.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/decompose.py" beforeDir="false" afterPath="$PROJECT_DIR$/decompose.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsp.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,6 +45,35 @@
     &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="decompose" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Tutorial" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/decompose.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.decompose" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -105,6 +85,7 @@
       <workItem from="1693139978087" duration="102000" />
       <workItem from="1693378662566" duration="358000" />
       <workItem from="1697457228617" duration="8134000" />
+      <workItem from="1697972314571" duration="986000" />
     </task>
     <servers />
   </component>
@@ -118,5 +99,8 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Tutorial$decompose.coverage" NAME="decompose Coverage Results" MODIFIED="1697973065349" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
