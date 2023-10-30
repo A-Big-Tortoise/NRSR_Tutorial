@@ -25,6 +25,68 @@ def eemd_decomposition(signal, noise_width=0.05, ensemble_size=100, show=False):
         plot_decomposed_components(signal, imfs, 'EEMD')
     return imfs
 
+def serial_emd_decomposition(signals, num_interval, show=False):
+    # Serial - EMD: Fast Empirical Mode Decomposition Method for Multi - dimensional Signals Based on Serialization
+    # https://github.com/ffbear1993/serial-emd
+
+    def concatenate(matrix_x: np.ndarray, num_interval: int):
+        num_length = matrix_x.shape[0]
+        num_signal = matrix_x.shape[1]
+
+        matrix_a = matrix_x[:num_interval, 1:]
+        matrix_b = matrix_x[-num_interval:, :-1]
+
+        vector_a = np.linspace(0, 1, num_interval + 2)[1:-1].reshape(-1, 1)
+        vector_u = np.ones(num_signal - 1).reshape(-1, 1)
+
+        # transition
+        matrix_t_a = np.flipud(matrix_a) * np.dot(vector_a, vector_u.T)
+        matrix_t_b = np.flipud(matrix_b) * np.dot(np.flipud(vector_a), vector_u.T)
+
+        matrix_t = matrix_t_a + matrix_t_b
+
+        matrix_z = np.zeros(num_interval).reshape(-1, 1)
+
+        # concatenate transition with zeros
+        matrix_t = np.concatenate([matrix_t, matrix_z], axis=1)
+
+        # result
+        matrix_r = np.concatenate([matrix_x, matrix_t], axis=0)
+        matrix_r = matrix_r.flatten(order='F')
+        matrix_r = matrix_r[:-num_interval].reshape(-1, 1)
+
+        return matrix_r
+
+    def deconcatenate(matrix_r: np.ndarray, num_interval: int, num_signal: int):
+        num_mode = matrix_r.shape[1]
+
+        # fill zeros
+        matrix_z = np.zeros([num_interval, num_mode])
+        matrix_r = np.concatenate([matrix_r, matrix_z], axis=0)
+
+        matrix_imf = matrix_r.reshape([-1, num_signal, num_mode], order='F')
+        matrix_imf = matrix_imf[:-num_interval, :, :]
+        matrix_imf = matrix_imf.transpose((0, 2, 1))
+
+        return matrix_imf
+
+    # signals (num_signal, length)
+    num_signal, _ = signals.shape
+    signals = signals.T
+    signals = (signals - signals.mean(0, keepdims=True)) / signals.std(0, keepdims=True)
+
+    serilized_x = concatenate(signals, num_interval).reshape(-1)
+    serilized_imfs = EMD()(serilized_x).T
+    # imfs for each signal, [num_length, num_imf_modes, num_signal]
+    imfs = deconcatenate(serilized_imfs, num_interval, num_signal)
+
+    print(f'concatenated signal shape:\t{serilized_x.shape}')
+    print(f'concatenated imfs shape:\t{serilized_imfs.shape}')
+    print(f'multi-dimensional imfs shape:\t{imfs.shape}')
+
+    # the shape of imfs (signal_length, decomposed_components, num_signal)
+    return imfs
+
 def ceemd_decomposition(signal, show=False):
     signal = standize_1D(signal)
     ceemdan = CEEMDAN()
@@ -104,6 +166,7 @@ if __name__ == '__main__':
     eemd_decomposition(signal, show=True)
     ceemd_decomposition(signal, show=True)
     vmd_decomposition(signal, show=True)
+    serial_emd_decomposition(signals[:5, :], num_interval=5)
 
 # if __name__ == '__main__':
 #     from Dataset import load_scg

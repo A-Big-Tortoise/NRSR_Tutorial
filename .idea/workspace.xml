@@ -6,13 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="4041f1b4-5b94-4489-8737-9e2c5cf84252" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/../Decompose/EMDs.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Notes/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Tutorial.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Tutorial.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Notes/DWT.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/Notes/DWT.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/decompose.py" beforeDir="false" afterPath="$PROJECT_DIR$/decompose.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsp.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsp.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +79,8 @@
       <workItem from="1693139978087" duration="102000" />
       <workItem from="1693378662566" duration="358000" />
       <workItem from="1697457228617" duration="8134000" />
-      <workItem from="1697972314571" duration="986000" />
+      <workItem from="1697972314571" duration="1583000" />
+      <workItem from="1698310731475" duration="259000" />
     </task>
     <servers />
   </component>
