@@ -79,7 +79,7 @@ def plot_decomposed_components(signal, components, title_name):
 
 def plot_filtered_signal(filtered_signal, signal, title_name):
     plt.figure()
-    plt.plot(signal, label='Original Signal', alpha=0.3)
+    plt.plot(signal, label='Original Signal', alpha=0.6)
     plt.plot(filtered_signal, label='Filtered Signal')
     plt.title(title_name)
     plt.legend()

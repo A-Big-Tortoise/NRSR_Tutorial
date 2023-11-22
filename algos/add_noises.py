@@ -84,7 +84,7 @@ def add_impulsive_noise(
     return noisy_signal
 
 def add_burst_noise(
-        signal, noise_amplitude=0.1, burst_num_max=1, burst_durations=[10, 50], burst_intervals=[100, 300], show=False):
+        signal, noise_amplitude=0.1, burst_num_max=1, burst_durations=[10, 100], show=False):
 
     signal_length = len(signal)
 
@@ -96,21 +96,20 @@ def add_burst_noise(
     burst_start = np.random.randint(0, (signal_length - burst_durations[1] + 1 )// burst_num_max)
 
     for _ in range(burst_num_max):
-        burst_duration = np.random.uniform(burst_durations[0], burst_durations[1])
+        burst_duration = np.random.randint(burst_durations[0], burst_durations[1])
         burst_end = burst_start + burst_duration
 
         if burst_end >= signal_length:
-            break
-        
-        burst_interval = np.random.uniform(burst_intervals[0], burst_intervals[1])
-        burst_start = burst_end + burst_interval
+            burst_end = signal_length
 
-        _noise[burst_start: burst_end] += np.random.normal(0, amp)
+        burst_end = burst_start + burst_duration
+        _noise[burst_start: burst_end] += np.random.normal(0, amp, size=burst_end-burst_start)
+
     noisy_signal = _noise + signal
+
     if show:
         plot_noise_signal(signal, noisy_signal, 'Add Burst Noise')
 
-    return noisy_signal
 
 def spectral_density(frequency_range, magnitude=1, noise_exponent=1, show=False):
     """

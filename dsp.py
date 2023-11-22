@@ -423,7 +423,7 @@ def add_impulsive_noise(
 
 
 def add_burst_noise(
-    signal, noise_amplitude=0.1, burst_num_max=1, burst_durations=[10, 50], burst_intervals=[100, 300], show=False
+        signal, noise_amplitude=0.3, burst_num_max=1, burst_durations=[10, 100], show=False
 ):
     """
     Add burst noise to a signal.
@@ -463,17 +463,15 @@ def add_burst_noise(
 
     # Generate burst noise events based on specified parameters
     for _ in range(burst_num_max):
-        burst_duration = np.random.uniform(burst_durations[0], burst_durations[1])
+        burst_duration = np.random.randint(burst_durations[0], burst_durations[1])
         burst_end = burst_start + burst_duration
 
         if burst_end >= signal_length:
-            break
+            burst_end = signal_length
 
-        burst_interval = np.random.uniform(burst_intervals[0], burst_intervals[1])
-        burst_start = burst_end + burst_interval
+        burst_end = burst_start + burst_duration
 
-        # Add Gaussian noise to the burst noise region
-        _noise[burst_start: burst_end] += np.random.normal(0, amp)
+        _noise[burst_start: burst_end] += np.random.normal(0, amp, size=burst_end-burst_start)
 
     # Add the burst noise to the input signal
     noisy_signal = _noise + signal
@@ -500,7 +498,7 @@ def spectral_density(frequency_range, magnitude=1, noise_exponent=1):
     return magnitude / (frequency_range ** noise_exponent)
 
 def add_colored_noise(
-        signal, sampling_rate=100, duration=10, noise_max=1, model=0, show=False
+        signal, noise_amplitude=0.3, model=0, sampling_rate=100, duration=10,  show=False
 ):
     """
     Add colored noise to a signal.
@@ -508,12 +506,12 @@ def add_colored_noise(
     Parameters:
     signal : array-like
         The input signal to which colored noise will be added.
+    noise_amplitude : float, optional
+        The amplitude of the noise.
     sampling_rate : int, optional
         The sampling rate of the audio signal.
     duration : float, optional
         Duration of the colored noise signal in seconds.
-    noise_max : float, optional
-        Maximum desired amplitude of the colored noise.
     model : int, optional
         The type of colored noise to generate:
         - 0: Pink noise
@@ -550,8 +548,7 @@ def add_colored_noise(
     _colored_noise = np.fft.irfft(spectrum, n=num_samples)
 
     # Scale the colored noise to achieve the desired maximum amplitude
-    scaling = _colored_noise.max() / noise_max
-    _colored_noise /= scaling
+    _colored_noise *= np.max(signal) * noise_amplitude
 
     # Add the colored noise to the input signal
     noisy_signal = _colored_noise + signal
@@ -564,7 +561,7 @@ def add_colored_noise(
 
 
 def add_flicker_noise(
-        signal, sampling_rate=100, duration=10, magnitude=1, noise_exponent=1, noise_max=1, show=False
+        signal, noise_amplitude=0.3, sampling_rate=100, duration=10, magnitude=1, noise_exponent=1, show=False
 ):
     """
     Add flicker (1/f) noise to a signal.
@@ -572,6 +569,8 @@ def add_flicker_noise(
     Parameters:
     signal : array-like
         The input signal to which flicker noise will be added.
+    noise_amplitude : float, optional
+        The amplitude of the burst noise.
     sampling_rate : int, optional
         The sampling rate of the audio signal.
     duration : float, optional
@@ -580,8 +579,6 @@ def add_flicker_noise(
         Magnitude of the flicker noise.
     noise_exponent : float, optional
         Exponent determining the slope of the spectral density.
-    noise_max : float, optional
-        Maximum desired amplitude of the flicker noise.
     show : bool, optional
         Whether to display a plot of the noisy signal.
 
@@ -605,8 +602,7 @@ def add_flicker_noise(
     _flicker_noise = np.fft.irfft(spectrum, n=num_samples)
 
     # Scale the flicker noise to achieve the desired maximum amplitude
-    scaling = _flicker_noise.max() / noise_max
-    _flicker_noise /= scaling
+    _flicker_noise *= np.max(signal) * noise_amplitude
 
     # Add the flicker noise to the input signal
     noisy_signal = _flicker_noise + signal
@@ -618,7 +614,7 @@ def add_flicker_noise(
     return noisy_signal
 
 def add_thermal_noise(
-        signal, sampling_rate=100, duration=10, Temperature=100, noise_max=1, show=False
+        signal, noise_amplitude=0.3, sampling_rate=100, duration=10, Temperature=100, show=False
 ):
     """
     Add thermal noise to a signal.
@@ -626,14 +622,14 @@ def add_thermal_noise(
     Parameters:
     signal : array-like
         The input signal to which thermal noise will be added.
+    noise_amplitude : float, optional
+        The amplitude of the burst noise.
     sampling_rate : int, optional
         The sampling rate of the audio signal.
     duration : float, optional
         Duration of the thermal noise signal in seconds.
     Temperature : float, optional
         Temperature in Kelvin, used to calculate thermal noise.
-    noise_max : float, optional
-        Maximum desired amplitude of the thermal noise.
     show : bool, optional
         Whether to display a plot of the noisy signal.
 
@@ -658,8 +654,7 @@ def add_thermal_noise(
     _thermal_noise = np.fft.irfft(spectrum, n=num_samples)
 
     # Scale the thermal noise to achieve the desired maximum amplitude
-    scaling = _thermal_noise.max() / noise_max
-    _thermal_noise /= scaling
+    _thermal_noise *= np.max(signal) * noise_amplitude
 
     # Add the thermal noise to the input signal
     noisy_signal = _thermal_noise + signal
@@ -703,9 +698,6 @@ def add_powerline_noise(
 
     # Calculate the standard deviation of the input signal
     signal_sd = np.std(signal, ddof=1)
-
-    # Generate a time array
-    time = np.linspace(0, duration, int(duration * sampling_rate))
 
     # Generate the powerline noise as a sine wave
     powerline_noise = sine_wave(duration=duration, sampling_rate=sampling_rate, amplitude=1, frequency=powerline_frequency, phase=0)
@@ -1180,7 +1172,7 @@ def exponential_moving_average_filter(signal, length=10, alpha=None, show=False)
 
     return filtered_signal
 
-def savgol_filter(signal, window_length=64, polyorder=1, show=False):
+def savgol_filter(signal, window_length=32, polyorder=1, show=False):
     """
     Apply a Savitzky-Golay filter to the input signal for smoothing.
 
@@ -1243,165 +1235,3 @@ def wiener_filter(signal, noise, show=False):
         plot_filtered_signal(filtered_signal, signal, "Wiener Filter")
 
     return filtered_signal
-
-if __name__ == '__main__':
-    # 1. help
-    # help add_white_noise
-
-    # 2. Use default parameters
-    # scg add_white_noise(signal=scg)
-
-    # 3. Use defined parameters
-    # scg add_white_noise(signal=scg,noise_amplitude=0.4,show=True)
-
-    # 4. input is function sequences
-    # scg add_white_noise(signal=scg,noise_amplitude=0.4,show=True) butter_bandpass_filter(signal=scg,show=True) eemd_decomposition(signal=scg,show=True)
-
-    # -------------------------------------------------------------------------------------------
-    # 5. create simple wave
-    # create sine_wave(amplitude=1,frequency=1,show=True)
-
-    # 6. create complex wave
-    # create sine_wave(amplitude=1,frequency=1,show=True)+square_wave(show=True)
-
-    # 7. add some noises to created waves
-    # create sine_wave(amplitude=1,frequency=1,show=True)+sine_wave(amplitude=2,frequency=2,show=True) add_white_noise(signal=scg,noise_amplitude=0.2,show=True)
-
-    # 8. use created waves as input to the algorithm
-    # create sine_wave(amplitude=1,frequency=1,show=True)+sine_wave(amplitude=2,frequency=2,show=True) add_white_noise(signal=scg,noise_amplitude=0.2,show=True) eemd_decomposition(signal=scg,show=True)
-
-    # 9. save the data
-    # save ./data
-
-
-    def check_arguments():
-        pass
-
-    def get_params(func_sequence, pattern = r'\((.*?)\)'):
-        # func_sequence: ['func1(a=1,b=4)', 'func1(a=2,b=2)', 'func2(a=1,b=3)', 'func2(a=1,b=3)']
-        import re
-
-        params = []
-        for input_str in func_sequence:
-            print(input_str)
-            match = re.search(pattern, input_str)
-            if match:
-                parameters_str = match.group(1)
-                parameters_list = parameters_str.split(',')
-                parameters_list = [param.strip() for param in parameters_list]
-                if parameters_list == ['']:
-                    parameters_dic = None
-                else:
-                    parameters_dic = {}
-                    for paramters in parameters_list:
-                        check_arguments()
-                        paramters_splits = paramters.split('=')
-                        if paramters_splits[0] == 'signal':
-                            continue
-                        if paramters_splits[0] == 'show':
-                            parameters_dic[paramters_splits[0]] = True if paramters_splits[-1] == 'true' else False
-                            continue
-                        parameters_dic[paramters_splits[0]] = float(paramters_splits[-1])
-                params.append([input_str.split('(')[0], parameters_dic])
-            else:
-                params.append([input_str.split('(')[0], None])
-        return params
-
-    def check_callable(func_name):
-        func = globals()[func_name]
-        if func is not None and callable(func):
-            return True
-        else:
-            print(f"函数 '{func_name}' 未找到或不可调用。")
-            print(f"")
-            return False
-
-    def load_scg_data():
-        signals_train, labels_train, duration, fs =  load_scg(0.1, 'train')
-        return signals_train[0]
-
-    def load_create_data(func_sequence_str):
-        func_sequence = func_sequence_str.split('+')
-        funcname_params = get_params(func_sequence)
-        middle_res = np.zeros(1000)
-
-        # iterate dic
-        for func_name, params in funcname_params:
-            if not check_callable(func_name):
-                break
-            func = globals()[func_name]
-            middle_res += func(**params)
-
-        plt.figure()
-        plt.plot(middle_res, label='Created Signal')
-        plt.title('Created Wave')
-        plt.legend()
-        plt.show()
-        return middle_res
-
-    def check_and_load_data(inputs):
-        data_sources = ['scg', 'create']
-        middle_res = None
-        func_seq_start = -1
-
-        if inputs[0] not in data_sources:
-            return None, None
-        elif inputs[0] == 'scg':
-            middle_res = load_scg_data()
-            func_seq_start = 1
-        elif inputs[0] == 'create':
-            middle_res = load_create_data(inputs[1])
-            func_seq_start = 2
-        return middle_res, func_seq_start
-
-
-    middle_res = None
-    while True:
-        inputs = input("Enter your command: ").lower().split(' ')
-
-        # quit
-        if inputs[0] in ['q', 'quit']:
-            print('quit')
-            break
-        if 'q' in inputs or 'quit' in inputs:
-            print('quit')
-            break
-
-        # help
-        if inputs[0] in ['h', 'help']:
-            for i in range(1, len(inputs)):
-                func_name = inputs[i]
-                print(help(globals()[func_name]))
-            continue
-
-        if inputs[0] in ['s', 'save']:
-            file_path = inputs[1]
-            default_path = os.path.join('data')
-            if middle_res is None:
-                print('There is nothing needed to save!')
-            else:
-                if os.path.exists(file_path):
-                    final_path = file_path
-                else:
-                    final_path = default_path
-                np.save(final_path, middle_res)
-            continue
-
-        func_seq_start = 1
-
-        middle_res, func_seq_start = check_and_load_data(inputs)
-
-        funcname_params = get_params(inputs[func_seq_start:])
-
-        # iterate dic
-        for func_name, params in funcname_params:
-            if not check_callable(func_name):
-                break
-            print(f'Function Name: {func_name}')
-            func = globals()[func_name]
-            params['signal'] = middle_res
-            print(f'Input shape of Function: {middle_res.shape}')
-            middle_res = func(**params)
-            print(f'Output shape of Function: {middle_res.shape}')
-            print()
-            # print(middle_res)
