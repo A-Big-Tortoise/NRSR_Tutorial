@@ -1,13 +1,17 @@
 import numpy as np
-from scipy.signal import butter
 # from sim_waves import sine_wave
 from PyEMD import EEMD, EMD, CEEMDAN
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 import scipy.signal
-from scipy.signal import butter, lfilter
+from scipy.signal import butter, lfilter, iirnotch, correlate
+import padasip as pa
 from dsp_utils import plot_sim_waves, plot_noise_signal, plot_decomposed_components, plot_filtered_signal
+import pywt
+
+
+
 from Dataset import load_scg
 import os
 # ==============================================================================
@@ -1235,3 +1239,204 @@ def wiener_filter(signal, noise, show=False):
         plot_filtered_signal(filtered_signal, signal, "Wiener Filter")
 
     return filtered_signal
+
+
+def rls_filter(x, d, n, mu, show=False):
+    """
+    Apply Recursive Least Squares (RLS) filter to input signal x to estimate a desired signal d.
+
+    Parameters:
+    - x: Input signal.
+    - d: Desired signal to be estimated.
+    - n: Order of the filter.
+    - mu: Convergence factor.
+
+    Returns:
+    - y: Output signal (estimated signal).
+    - e: Error signal (difference between estimated and desired signals).
+    - w: Filter weights after processing the signals.
+    """
+    x_np = np.array(x)
+    d_np = np.array(d)
+
+    # Ensure x and d are 2D arrays
+    if x_np.ndim == 1:
+        x_np = x_np.reshape(-1, 1)
+    if d_np.ndim == 1:
+        d_np = d_np.reshape(-1, 1)
+
+    # Create an RLS filter with specified parameters
+    f = pa.filters.FilterRLS(n=n, mu=mu, w="random")
+
+    # Run the RLS filter on the input and desired signals
+    y, e, w = f.run(d_np, x_np)
+
+    if show:
+        plot_filtered_signal(y, x, "Recursive Least Squares (RLS) Filter")
+
+    return y, e, w
+
+
+def lms_filter(x, d, n, mu, show=False):
+    """
+    Apply Least Mean Squares (LMS) filter to input signal x to estimate a desired signal d.
+
+    Parameters:
+    - x: Input signal.
+    - d: Desired signal to be estimated.
+    - n: Order of the filter.
+    - mu: Convergence factor.
+
+    Returns:
+    - y: Output signal (estimated signal).
+    - e: Error signal (difference between estimated and desired signals).
+    - w: Filter weights after processing the signals.
+    """
+    x_np = np.array(x)
+    d_np = np.array(d)
+
+    # Ensure x and d are 2D arrays
+    if x_np.ndim == 1:
+        x_np = x_np.reshape(-1, 1)
+    if d_np.ndim == 1:
+        d_np = d_np.reshape(-1, 1)
+
+    # Create an LMS filter with specified parameters
+    f = pa.filters.FilterLMS(n=n, mu=mu, w="random")
+
+    # Run the LMS filter on the input and desired signals
+    y, e, w = f.run(d_np, x_np)
+
+    if show:
+        plot_filtered_signal(y, x, "Least Mean Squares (LMS) Filter")
+
+    return y, e, w
+
+def notch_filter(signal, cutoff=10, q=10, fs=100, show=False):
+    """
+    Apply a Notch Filter to Remove Interference at a Specific Frequency.
+
+    Args:
+        signal (array-like): The input signal to be filtered.
+        cutoff (float, optional): The center frequency to be removed (in Hz). Default is 10 Hz.
+        q (float, optional): The quality factor or Q factor of the filter. Higher values result in narrower notches. Default is 10.
+        fs (float, optional): The sampling frequency of the input signal (in Hz). Default is 100 Hz.
+
+    Returns:
+        array-like: The filtered signal with the specified frequency removed.
+
+    Notes:
+        - This function uses SciPy's IIR notch filter implementation to suppress interference at the specified frequency.
+        - The notch filter is used to eliminate a narrow frequency band around the 'cutoff' frequency.
+        - The 'q' parameter controls the width of the notch; higher 'q' values create narrower notches.
+
+    Example:
+        >>> import numpy as np
+        >>> from scipy.signal import lfilter
+        >>> noisy_signal = np.sin(2 * np.pi * 50 * np.linspace(0, 1, 1000)) + 0.5 * np.random.randn(1000)
+        >>> filtered_signal = notch_filter(noisy_signal, cutoff=50, q=30, fs=1000)
+    """
+    # Create an IIR Notch filter with specified parameters
+    b, a = iirnotch(cutoff, q, fs)
+
+    # Apply the Notch filter to the input signal
+    filtered_signal = lfilter(b, a, signal)
+
+    if show:
+        plot_filtered_signal(filtered_signal, signal, "Notch Filter")
+
+    return filtered_signal
+
+def matched_filter(signal, template, show=False):
+    """
+    Apply matched filter to a signal using a template.
+
+    Parameters:
+    - signal: The input signal.
+    - template: The template signal.
+
+    Returns:
+    - filtered_output: The output of the matched filter.
+    """
+    # Ensure inputs are numpy arrays
+    signal = np.array(signal)
+    template = np.array(template)
+
+    # Reverse the template signal
+    template = np.flip(template)
+
+    # Perform convolution using numpy's convolve function
+    filtered_signal = np.convolve(signal, template, mode='full')
+
+    if show:
+        plt.figure()
+        plt.plot(filtered_signal, label='Filtered Signal')
+        plt.title("Matched Filter")
+        plt.legend()
+        plt.show()
+
+    return filtered_signal
+
+
+def fft_denoise(signal, threshold, show=False):
+    """
+    Applies FFT-based denoising to a signal.
+
+    Parameters:
+    signal (array-like): Input signal to be denoised.
+    threshold (float): Threshold for filtering out noise.
+
+    Returns:
+    array-like: Denoised signal after applying FFT-based denoising.
+    """
+
+    num_samples = len(signal)  # Length of the input signal
+    fhat = np.fft.fft(signal)  # Compute the FFT of the signal
+    psd = fhat * np.conjugate(fhat) / num_samples  # Compute the power spectral density
+    indices = psd > threshold  # Identify indices above the threshold for filtering
+    fhat = indices * fhat  # Apply filtering to the FFT coefficients
+    ffilt = np.fft.ifft(fhat)  # Compute the inverse FFT
+    ffilt = ffilt.real  # Take the real part of the inverse FFT
+
+    if show:
+        plot_filtered_signal(ffilt, signal, "FFT Denoising")
+
+    return ffilt
+
+
+def wavelet_denoise(data, method, threshold, show=False):
+    """
+    Applies wavelet-based denoising to the input data.
+
+    Parameters:
+    data (array-like): Input data to be denoised.
+    method (str): Wavelet transform method to be used. like 'sym4' and so on.
+    threshold (float): Threshold for filtering out noise.
+
+    Returns:
+    array-like: Denoised data after applying wavelet-based denoising.
+    """
+
+    # Create a Wavelet object using the specified method
+    w = pywt.Wavelet(method)
+
+    # Calculate the maximum decomposition level based on data length and wavelet length
+    maxlev = pywt.dwt_max_level(len(data), w.dec_len)
+
+    print("maximum level is " + str(maxlev))
+
+    # Perform wavelet decomposition on the input data up to the maximum level
+    coeffs = pywt.wavedec(data, method, level=maxlev)
+
+    # Loop through the wavelet coefficients (except the first one, which is the approximation)
+    for i in range(1, len(coeffs)):
+        # Apply thresholding to each coefficient by multiplying with a factor of the maximum coefficient
+        coeffs[i] = pywt.threshold(coeffs[i], threshold * max(coeffs[i]))
+
+    # Reconstruct the denoised data using the modified wavelet coefficients
+    datarec = pywt.waverec(coeffs, method)
+
+    if show:
+        plot_filtered_signal(datarec, data, "Wavelet Denoising")
+
+    return datarec
