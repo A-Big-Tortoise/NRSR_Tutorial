@@ -2,7 +2,7 @@ import numpy as np
 from scipy.signal import butter
 from sim_waves import sine_wave
 import copy
-from Tutorial.utils import plot_noise_signal
+from utils import plot_noise_signal
 
 """
 可能潜藏着的问题：
@@ -295,8 +295,8 @@ if __name__ == '__main__':
 
     sampling_rate = fs
 
-    attenuation_factor = [0.6, 0.3]
-    delay_factor = [5, 10]
+    attenuation_factor = [0.8, 0.5]
+    delay_factor = [15, 30]
 
     noisy_signal = add_echo_noise(signal, 2, attenuation_factor, delay_factor, show=True)
 

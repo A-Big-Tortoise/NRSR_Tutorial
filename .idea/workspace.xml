@@ -5,8 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4041f1b4-5b94-4489-8737-9e2c5cf84252" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Decompose/EMDs.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Frequency/Freq_150.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Frequency/Freq_200.ipynb" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/algp_kf.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Clustering.ipynb" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DTW/DTW_framework_DBA.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/DBA.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DTW/DTW_framework_DBA_Noise.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/DBA_Noise.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DTW/KSC.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/KSC.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DTW/NLAAF.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/NLAAF.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DTW/PSA.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/PSA.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../RealData/Implementation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../RealData/Implementation.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/add_noises.py" beforeDir="false" afterPath="$PROJECT_DIR$/add_noises.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/decompose.py" beforeDir="false" afterPath="$PROJECT_DIR$/decompose.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/2023/BedDot_HRRRIBI_accepted.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/2023/BedDot_HRRRIBI_accepted.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/GTW.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/GTW.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/NOT SURE/Nonsmooth Analysis and Subgradient Methods for Averaging in DTW Spaces.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/SSG.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/SSG.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/Time-series averaging using constrained dynamic time warping with tolerance.pdf" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,13 +48,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="decompose" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Tutorial" />
@@ -81,6 +98,8 @@
       <workItem from="1697457228617" duration="8134000" />
       <workItem from="1697972314571" duration="1583000" />
       <workItem from="1698310731475" duration="259000" />
+      <workItem from="1699272089361" duration="3129000" />
+      <workItem from="1700619446279" duration="17000" />
     </task>
     <servers />
   </component>

@@ -3,8 +3,25 @@ from PyEMD import EEMD, EMD, CEEMDAN
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
 # from Tutorial.utils import plot_decomposed_components
-from utils import plot_decomposed_components
+# from Code.Tutorial.utils import utils import plot_decomposed_components
 import matplotlib.pyplot as plt
+
+def plot_decomposed_components(signal, components, title_name):
+    n_components = len(components)
+
+    plt.subplots(n_components+1, 1)
+    plt.subplot(n_components+1, 1, 1)
+    plt.title(title_name)
+
+    plt.plot(signal, label='Original Signal', color='r')
+
+    for cnt, component in enumerate(components):
+        # print(cnt+1, n_components)
+        plt.subplot(n_components+1, 1, cnt+2)
+        plt.plot(component, label='Component'+str(cnt+1))
+        plt.legend()
+
+    plt.show()
 
 def standize_1D(signal):
     return (signal - signal.mean()) / signal.std()
