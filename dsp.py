@@ -1,13 +1,13 @@
 import numpy as np
 from scipy.signal import butter
-from sim_waves import sine_wave
+# from sim_waves import sine_wave
 from PyEMD import EEMD, EMD, CEEMDAN
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 import scipy.signal
 from scipy.signal import butter, lfilter
-from utils import plot_sim_waves, plot_noise_signal, plot_decomposed_components, plot_filtered_signal
+from dsp_utils import plot_sim_waves, plot_noise_signal, plot_decomposed_components, plot_filtered_signal
 from Dataset import load_scg
 import os
 # ==============================================================================
@@ -217,7 +217,7 @@ def chirp_wave_hyperbolic(duration=10, sampling_rate=100, f0=1, f1=10, phase=0, 
     if sampling_rate / 2 <= f0 or sampling_rate / 2 <= f1:
         raise ValueError(f"Sampling rate is {sampling_rate} and Initial Frequency is {f0} and Final Frequency {f1}. Nyquist Error!")
 
-    chirp_wave = np.sin(phase + 2 * np.pi * ((-1 * f0 * f1 * time) / (f1 - f0) * np.log(1 - (f1 - f0) / (f1 * time) * time)))
+    chirp_wave = np.sin(phase + 2 * np.pi * ((-1 * f0 * f1 * duration) / (f1 - f0) * np.log(1 - (f1 - f0) / (f1 * duration) * time)))
 
     if show:
         plot_sim_waves(chirp_wave, 'Chirp Wave Hyperbolic')
@@ -317,7 +317,7 @@ def add_white_noise(signal, noise_amplitude=0.1, model=0, show=False):
 
 # 和上面的白噪声一样，没有考虑过noise_freq和noise_duration，可能后期需要大改
 def add_band_limited_white_noise(
-        signal, noise_amplitude=0.1, sampling_rate=100, lowcut=0.1, highcut=5, order=4, show=False
+        signal, noise_amplitude=0.1, sampling_rate=100, lowcut=0.1, highcut=5, order=3, show=False
 ):
     """
     Add band-limited white noise to a signal.
@@ -355,7 +355,7 @@ def add_band_limited_white_noise(
     b, a = butter(order, [lowcut, highcut], btype='band', fs=sampling_rate)
 
     # Apply the bandpass filter to the generated white noise
-    _band_limited_noise = signal.lfilter(b, a, _noise)
+    _band_limited_noise = lfilter(b, a, _noise)
 
     # Add the band-limited noise to the input signal
     noisy_signal = _band_limited_noise + signal
@@ -368,7 +368,7 @@ def add_band_limited_white_noise(
 
 
 def add_impulsive_noise(
-        signal, noise_amplitude=0.1, rate=None, number=None, show=False
+        signal, noise_amplitude=1, rate=None, number=None, show=False
 ):
     """
     Add impulsive noise to a signal.
@@ -413,7 +413,7 @@ def add_impulsive_noise(
     impulsive_noise = np.random.choice([0, 1], size=num_samples, p=pob) * np.random.normal(0, amp, num_samples)
 
     # Add the impulsive noise to the input signal
-    noisy_signal = impulsive_noise + signal
+    noisy_signal = np.abs(impulsive_noise) + signal
 
     if show:
         # If requested, plot the original and noisy signals
@@ -757,7 +757,7 @@ def add_echo_noise(
 
     # Create a copy of the original signal
     original_signal = signal.copy()
-
+    echos = np.zeros(shape=original_signal.shape)
     # Iterate over each echo and apply attenuation and delay
     for a_factor, d_factor in zip(attenuation_factor, delay_factor):
         # Apply attenuation to the signal
@@ -768,10 +768,10 @@ def add_echo_noise(
         attenuation_signal[:d_factor] = 0
 
         # Add the attenuated and delayed signal to the original signal
-        original_signal += attenuation_signal
+        echos += attenuation_signal
 
     # Combine the original signal with all the echoes to create the noisy signal
-    noisy_signal = original_signal + signal
+    noisy_signal = echos + signal
 
     if show:
         # If requested, plot the original and noisy signals

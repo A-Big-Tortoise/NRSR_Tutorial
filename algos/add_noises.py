@@ -2,7 +2,8 @@ import numpy as np
 from scipy.signal import butter
 from sim_waves import sine_wave
 import copy
-from utils import plot_noise_signal
+from dsp_utils import plot_noise_signal
+
 
 """
 可能潜藏着的问题：

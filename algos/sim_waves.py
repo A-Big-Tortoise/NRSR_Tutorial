@@ -1,5 +1,5 @@
 import numpy as np
-from utils import plot_sim_waves
+from dsp_utils import plot_sim_waves
 
 def sine_wave(duration=10, sampling_rate=100, amplitude=1, frequency=1, phase=0, show=False):
     """
