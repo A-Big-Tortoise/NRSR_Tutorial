@@ -15,8 +15,6 @@
       <change beforePath="$PROJECT_DIR$/../DTW/PSA.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/PSA.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../RealData/Implementation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../RealData/Implementation.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsp.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/dsp.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dsp.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsp.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Paper4Reference/2023/BedDot_HRRRIBI_accepted.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/2023/BedDot_HRRRIBI_accepted.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/GTW.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/GTW.pdf" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/NOT SURE/Nonsmooth Analysis and Subgradient Methods for Averaging in DTW Spaces.pdf" beforeDir="false" />
@@ -47,14 +45,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "WebServerToolWindowFactoryState": "true",
-    "settings.editor.selected.configurable": "org.jetbrains.plugins.notebooks.jupyter.connections.configuration.JupyterServerConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.notebooks.jupyter.connections.configuration.JupyterServerConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Python.add_noises">
     <configuration name="add_noises" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Tutorial" />
@@ -123,6 +121,8 @@
       <workItem from="1699272089361" duration="3129000" />
       <workItem from="1700619446279" duration="4378000" />
       <workItem from="1700639529931" duration="4987000" />
+      <workItem from="1700644658589" duration="947000" />
+      <workItem from="1700717881799" duration="8000" />
     </task>
     <servers />
   </component>
