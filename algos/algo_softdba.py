@@ -17,7 +17,8 @@ def performSOFTDBA(pieces):
     Reference:
     Cuturi, Marco, and Mathieu Blondel. "Soft-dtw: a differentiable loss function for time-series." International conference on machine learning. PMLR, 2017.
     """
+    template = softdtw_barycenter(pieces)
 
-    return softdtw_barycenter(pieces)
+    return template
 
 

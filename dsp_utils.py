@@ -110,3 +110,12 @@ def plot_adp_filtered_signal(y, d_signal, error):
 
     plt.tight_layout()
     plt.show()
+
+def plot_averaging_center(center, pieces):
+    plt.figure()
+    plt.title("Center of Signal Pieces")
+    for piece in pieces:
+        plt.plot(piece, alpha=0.35)
+    plt.plot(center, "r", linewidth=2, label="Center")
+    plt.legend()
+    plt.show()
