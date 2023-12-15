@@ -1,0 +1,15 @@
+EMD_signal==1.4.0
+ewtpy==0.2
+matplotlib==3.5.3
+numpy==1.22.3
+padasip==1.2.2
+pandas==1.4.3
+PyEMD==1.0.0
+PyWavelets==1.4.1
+scikit_learn==1.1.3
+scipy==1.9.3
+seaborn==0.13.0
+shapedtw==1.0.3
+statsmodels==0.13.5
+tslearn==0.6.1
+vmdpy==0.2
