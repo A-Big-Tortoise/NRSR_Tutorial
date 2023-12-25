@@ -9,6 +9,7 @@ from scipy.signal import butter, lfilter, iirnotch, correlate
 import padasip as pa
 from dsp_utils import plot_sim_waves, plot_noise_signal, plot_decomposed_components, plot_filtered_signal
 import pywt
+import pandas as pd
 
 
 
@@ -821,10 +822,80 @@ def add_click_noise(
     return noisy_signal
 
 
+def add_distort_noise(
+    signal, n_samples, sampling_rate=100, noise_frequency=10, noise_amplitude=0.1, show=False):
+    """
+    Generate a noisy signal with distorted noise.
+
+    Parameters:
+    signal : array-like
+        The input signal to which distorted noise will be added.
+    n_samples : int
+        Number of samples in the output signal.
+    sampling_rate : int, optional
+        Sampling rate of the signal (default is 1000 Hz).
+    noise_frequency : int, optional
+        Frequency of the noise signal (default is 100 Hz).
+    noise_amplitude : float, optional
+        Amplitude of the noise signal (default is 0.1).
+    show : bool, optional
+        Whether to display a plot of the original and noisy signals.
+
+    Returns:
+    noisy_signal : array-like
+        An array containing the values of the generated noisy signal.
+    """
+    # Check if the number of samples matches the length of the input signal
+    if n_samples != len(signal):
+        print('n_samples should be equal to the length of signal')
+        return None
+
+    # Initialize an array to store the generated noise samples
+    _noise = np.zeros(n_samples)
+
+    # Apply a very conservative Nyquist criterion to ensure sufficiently sampled signals.
+    nyquist = sampling_rate * 0.4
+    if noise_frequency > nyquist:
+        print(
+            f"Skipping requested noise frequency of {noise_frequency} Hz since it cannot be resolved at "
+            f"the sampling rate of {sampling_rate} Hz. Please increase sampling rate to {noise_frequency * 2.5} Hz or choose "
+            f"frequencies smaller than or equal to {nyquist} Hz."
+        )
+
+    # Calculate the duration of the signal
+    duration = n_samples / sampling_rate
+
+    # Check if the requested noise frequency is feasible given the signal duration
+    if (1 / noise_frequency) > duration:
+        print(
+            f"Skipping requested noise frequency of {noise_frequency} Hz since its period of {1 / noise_frequency} "
+            f"seconds exceeds the signal duration of {duration} seconds. Please choose noise frequencies larger than "
+            f"{1 / duration} Hz or increase the duration of the signal above {1 / noise_frequency} seconds."
+        )
+
+    # Calculate the duration of the noise in samples
+    noise_duration = int(duration * noise_frequency)
+
+    # Generate noise based on the specified shape and amplitude
+    _noise = np.random.normal(0, noise_amplitude * np.std(signal), noise_duration)
+
+    # Adjust the length of the noise array to match the specified number of samples
+    if len(_noise) != n_samples:
+        _noise = scipy.ndimage.zoom(_noise, n_samples / len(_noise))
+
+    # Add the generated noise to the input signal
+    noisy_signal = signal + _noise
+
+    # If requested, plot the original and noisy signals
+    if show:
+        plot_noise_signal(signal, noisy_signal, f'Add Noise of {noise_frequency} Hz')
+
+    return noisy_signal
+
+
 # ==============================================================================
 # ------------------------------------Noise-------------------------------------
 # ==============================================================================
-
 
 def standize_1D(signal):
     return (signal - signal.mean()) / signal.std()
@@ -1010,6 +1081,150 @@ def seasonal_decomposition(signal, period=100, model=0, show=False):
         plt.show()
 
     return components
+
+
+class SSA(object):
+    __supported_types = (pd.Series, np.ndarray, list)
+
+    def __init__(self, tseries, L, save_mem=True):
+        """
+        Decomposes the given time series with a singular-spectrum analysis. Assumes the values of the time series are
+        recorded at equal intervals.
+
+        Parameters
+        ----------
+        tseries : The original time series, in the form of a Pandas Series, NumPy array or list.
+        L : The window length. Must be an integer 2 <= L <= N/2, where N is the length of the time series.
+        save_mem : Conserve memory by not retaining the elementary matrices. Recommended for long time series with
+            thousands of values. Defaults to True.
+
+        Note: Even if an NumPy array or list is used for the initial time series, all time series returned will be
+        in the form of a Pandas Series or DataFrame object.
+        """
+
+        # Tedious type-checking for the initial time series
+        if not isinstance(tseries, self.__supported_types):
+            raise TypeError("Unsupported time series object. Try Pandas Series, NumPy array or list.")
+
+        # Checks to save us from ourselves
+        self.N = len(tseries)
+        if not 2 <= L <= self.N / 2:
+            raise ValueError("The window length must be in the interval [2, N/2].")
+
+        self.L = L
+        self.orig_TS = pd.Series(tseries)
+        self.K = self.N - self.L + 1
+
+        # Embed the time series in a trajectory matrix
+        self.X = np.array([self.orig_TS.values[i:L + i] for i in range(0, self.K)]).T
+
+        # Decompose the trajectory matrix
+        self.U, self.Sigma, VT = np.linalg.svd(self.X)
+        self.d = np.linalg.matrix_rank(self.X)
+
+        self.TS_comps = np.zeros((self.N, self.d))
+
+        if not save_mem:
+            # Construct and save all the elementary matrices
+            self.X_elem = np.array([self.Sigma[i] * np.outer(self.U[:, i], VT[i, :]) for i in range(self.d)])
+
+            # Diagonally average the elementary matrices, store them as columns in array.
+            for i in range(self.d):
+                X_rev = self.X_elem[i, ::-1]
+                self.TS_comps[:, i] = [X_rev.diagonal(j).mean() for j in range(-X_rev.shape[0] + 1, X_rev.shape[1])]
+
+            self.V = VT.T
+        else:
+            # Reconstruct the elementary matrices without storing them
+            for i in range(self.d):
+                X_elem = self.Sigma[i] * np.outer(self.U[:, i], VT[i, :])
+                X_rev = X_elem[::-1]
+                self.TS_comps[:, i] = [X_rev.diagonal(j).mean() for j in range(-X_rev.shape[0] + 1, X_rev.shape[1])]
+
+            self.X_elem = "Re-run with save_mem=False to retain the elementary matrices."
+
+            # The V array may also be very large under these circumstances, so we won't keep it.
+            self.V = "Re-run with save_mem=False to retain the V matrix."
+
+        # Calculate the w-correlation matrix.
+        self.calc_wcorr()
+
+    def components_to_df(self, n=0):
+        """
+        Returns all the time series components in a single Pandas DataFrame object.
+        """
+        if n > 0:
+            n = min(n, self.d)
+        else:
+            n = self.d
+
+        # Create list of columns - call them F0, F1, F2, ...
+        cols = ["F{}".format(i) for i in range(n)]
+        return pd.DataFrame(self.TS_comps[:, :n], columns=cols, index=self.orig_TS.index)
+
+    def reconstruct(self, indices):
+        """
+        Reconstructs the time series from its elementary components, using the given indices. Returns a Pandas Series
+        object with the reconstructed time series.
+
+        Parameters
+        ----------
+        indices: An integer, list of integers or slice(n,m) object, representing the elementary components to sum.
+        """
+        if isinstance(indices, int): indices = [indices]
+
+        ts_vals = self.TS_comps[:, indices].sum(axis=1)
+        return pd.Series(ts_vals, index=self.orig_TS.index)
+
+    def calc_wcorr(self):
+        """
+        Calculates the w-correlation matrix for the time series.
+        """
+
+        # Calculate the weights
+        w = np.array(list(np.arange(self.L) + 1) + [self.L] * (self.K - self.L - 1) + list(np.arange(self.L) + 1)[::-1])
+
+        def w_inner(F_i, F_j):
+            return w.dot(F_i * F_j)
+
+        # Calculated weighted norms, ||F_i||_w, then invert.
+        F_wnorms = np.array([w_inner(self.TS_comps[:, i], self.TS_comps[:, i]) for i in range(self.d)])
+        F_wnorms = F_wnorms ** -0.5
+
+        # Calculate Wcorr.
+        self.Wcorr = np.identity(self.d)
+        for i in range(self.d):
+            for j in range(i + 1, self.d):
+                self.Wcorr[i, j] = abs(w_inner(self.TS_comps[:, i], self.TS_comps[:, j]) * F_wnorms[i] * F_wnorms[j])
+                self.Wcorr[j, i] = self.Wcorr[i, j]
+
+    def plot_wcorr(self, min=None, max=None):
+        """
+        Plots the w-correlation matrix for the decomposed time series.
+        """
+        if min is None:
+            min = 0
+        if max is None:
+            max = self.d
+
+        if self.Wcorr is None:
+            self.calc_wcorr()
+
+        ax = plt.imshow(self.Wcorr)
+        plt.xlabel(r"$\tilde{F}_i$")
+        plt.ylabel(r"$\tilde{F}_j$")
+        plt.colorbar(ax.colorbar, fraction=0.045)
+        ax.colorbar.set_label("$W_{i,j}$")
+        plt.clim(0, 1)
+
+        # For plotting purposes:
+        if max == self.d:
+            max_rnge = self.d - 1
+        else:
+            max_rnge = max
+
+        plt.xlim(min - 0.5, max_rnge + 0.5)
+        plt.ylim(max_rnge + 0.5, min - 0.5)
 
 # ==============================================================================
 # ------------------------------------Filter-------------------------------------
@@ -1443,12 +1658,63 @@ def wavelet_denoise(data, method, threshold, show=False):
 
 
 # ==============================================================================
+# -------------------------Blind Source Separation------------------------------
+# ==============================================================================
+
+from sklearn.decomposition import FastICA, PCA
+
+def bss_ica(X, n_components):
+    """
+    Apply Independent Component Analysis (ICA) to the input data.
+
+    Parameters:
+    X (array-like): Input data matrix with shape (n_samples, n_features).
+    n_components (int): Number of independent components to extract.
+
+    Returns:
+    S_ (array-like): Reconstructed source signals.
+    A_ (array-like): Estimated mixing matrix.
+    """
+    ica = FastICA(n_components=n_components)
+
+    # Apply ICA to the input data to extract independent components
+    S_ = ica.fit_transform(X)  # Reconstruct signals
+
+    A_ = ica.mixing_  # Get estimated mixing matrix
+
+    # Verify the ICA model by checking if the original data can be reconstructed
+    # using the estimated mixing matrix and the extracted sources
+    assert np.allclose(X, np.dot(S_, A_.T) + ica.mean_)
+
+    return S_, A_
+
+
+def bss_pca(X, n_components):
+    """
+    Apply Principal Component Analysis (PCA) to the input data.
+
+    Parameters:
+    X (array-like): Input data matrix with shape (n_samples, n_features).
+    n_components (int): Number of principal components to retain.
+
+    Returns:
+    transformed_X (array-like): Data projected onto the first n_components principal components.
+    """
+    pca = PCA(n_components=n_components)
+
+    # Apply PCA to the input data to extract orthogonal components
+    transformed_X = pca.fit_transform(X)  # Reconstruct signals based on orthogonal components
+
+    return transformed_X
+
+
+# ==============================================================================
 # -------------------------------------DTW--------------------------------------
 # ==============================================================================
 
 from tslearn.barycenters import softdtw_barycenter
 from dsp_utils import plot_averaging_center
-from DTW import dtwPlotTwoWay, dtw_easy
+from Tutorial.DTW import dtwPlotTwoWay, dtw_easy
 from scipy.interpolate import CubicSpline
 import random
 
@@ -1774,7 +2040,7 @@ def make_template(piece0, piece1, path):
 
 def performNLAAF1(pieces, dist=lambda x, y: np.abs(x - y), show=False):
     """
-    Perform Non-Local Adaptive Averaging Fusion 1 (NLAAF1) on a list of time series pieces.
+    Perform Non-Linear Adaptive Averaging Filter 1 (NLAAF1) on a list of time series pieces.
 
     Parameters:
     - pieces (list): List of time series pieces (1D arrays) to be fused.
@@ -1825,7 +2091,7 @@ def performNLAAF1(pieces, dist=lambda x, y: np.abs(x - y), show=False):
 
 def performNLAAF2(pieces, dist=lambda x, y: np.abs(x - y), show=False):
     """
-    Perform Non-Local Adaptive Averaging Fusion 2 (NLAAF2) on a list of time series pieces.
+    Perform  Non-Linear Adaptive Averaging Filter 2 (NLAAF2) on a list of time series pieces.
 
     Parameters:
     - pieces (list): List of time series pieces (1D arrays) to be fused.

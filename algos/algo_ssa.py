@@ -147,7 +147,7 @@ class SSA(object):
 
 if __name__ == '__main__':
     # Import necessary functions/classes from Dataset module
-    from Dataset import load_scg
+    from Tutorial.Dataset import load_scg
 
     # Load SCG data with specified parameters
     signals, labels, duration, fs = load_scg(0.8, 'train')
