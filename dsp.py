@@ -40,7 +40,7 @@ def sine_wave(duration=10, sampling_rate=100, amplitude=1, frequency=1, phase=0,
         An array containing the values of the sine wave signal at the given time points.
 
     """
-    time = np.linspace(0, duration, duration * sampling_rate)
+    time = np.linspace(0, duration, duration * sampling_rate, endpoint=False)
     sine_wave = amplitude * np.sin(2 * np.pi * frequency * time + phase)
 
     if show:
@@ -68,7 +68,7 @@ def triangle_wave(duration=10, sampling_rate=100, amplitude=1, period=2, show=Fa
         An array containing the values of the triangle wave signal at the given time points.
     """
 
-    time = np.linspace(0, duration, duration * sampling_rate)
+    time = np.linspace(0, duration, duration * sampling_rate, endpoint=False)
     # Scale the time values to a normalized range [-1, 1] within each period
     t_scaled = 1 * np.abs(2 * (time / period - np.floor(time / period + 0.5))) - 1
 
@@ -98,7 +98,7 @@ def square_wave(duration=10, sampling_rate=100, frequency=1, show=False):
     square_wave : array-like
         An array containing the values of the square wave signal at the given time points.
     """
-    time = np.linspace(0, duration, duration * sampling_rate)
+    time = np.linspace(0, duration, duration * sampling_rate, endpoint=False)
     square_wave = 2 * (2 * np.floor(frequency * time) - np.floor(2 * frequency * time)) + 1
 
     if show:
@@ -127,7 +127,7 @@ def chirp_wave_linear(duration=10, sampling_rate=100, f0=1, c=1, phase=0, show=F
     chrip_wave_linear : array-like
         An array containing the values of the linear chirp wave signal at the given time points.
     """
-    time = np.linspace(0, duration, duration * sampling_rate)
+    time = np.linspace(0, duration, duration * sampling_rate, endpoint=False)
 
     # Calculate the final frequency of the chirp
     f1 = c * duration + f0
@@ -169,7 +169,7 @@ def chirp_wave_exponential(duration=10, sampling_rate=100, f0=1, k=1.2, phase=0,
     chirp_wave_exponential : array-like
         An array containing the values of the exponential chirp wave signal at the given time points.
     """
-    time = np.linspace(0, duration, duration * sampling_rate)
+    time = np.linspace(0, duration, duration * sampling_rate, endpoint=False)
 
     # Calculate the final frequency of the exponential chirp
     f1 = f0 * (k ** duration - 1)
@@ -213,7 +213,7 @@ def chirp_wave_hyperbolic(duration=10, sampling_rate=100, f0=1, f1=10, phase=0, 
     chirp_wave_hyperbolic : array-like
         An array containing the values of the hyperbolic chirp wave signal at the given time points.
     """
-    time = np.linspace(0, duration, duration * sampling_rate)
+    time = np.linspace(0, duration, duration * sampling_rate, endpoint=False)
 
     # Check for valid frequencies and Nyquist conditions
     if f0 <= 0 or f1 <= 0:
@@ -251,7 +251,7 @@ def pulse_wave(duration=10, sampling_rate=100, amplitude=1, d=0.5, frequency=1, 
     pulse_wave : array-like
         An array containing the values of the pulse wave signal at the given time points.
     """
-    time = np.linspace(0, duration, duration * sampling_rate)
+    time = np.linspace(0, duration, duration * sampling_rate, endpoint=False)
 
     sum_of_ = 0
 
