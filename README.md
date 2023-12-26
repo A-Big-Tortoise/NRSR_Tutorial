@@ -75,6 +75,15 @@
 
 
 
+### Time Series Averaging
+
+| CONTENT       | IMPLEMENT | EXAMPLE  |
+| ------------- | --------- | -------- |
+| NLAAF1/NLAAF2 | &#10004;  | &#10004; |
+| ICDTW         | &#10004;  | &#10004; |
+| DBA           | &#10004;  | &#10004; |
+| SOFT-DTW      | &#10004;  | &#10004; |
+
 
 
 

@@ -1,5 +1,4 @@
 import numpy as np
-# from sim_waves import sine_wave
 from PyEMD import EEMD, EMD, CEEMDAN
 from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
@@ -11,9 +10,6 @@ from dsp_utils import plot_sim_waves, plot_noise_signal, plot_decomposed_compone
 import pywt
 import pandas as pd
 
-
-
-from Dataset import load_scg
 import os
 # ==============================================================================
 # ------------------------------------Waves-------------------------------------
@@ -1714,9 +1710,70 @@ def bss_pca(X, n_components):
 
 from tslearn.barycenters import softdtw_barycenter
 from dsp_utils import plot_averaging_center
-from Tutorial.DTW import dtwPlotTwoWay, dtw_easy
 from scipy.interpolate import CubicSpline
 import random
+
+def _traceback(D):
+    i, j = np.array(D.shape) - 2
+    p, q = [i], [j]
+    while (i > 0) or (j > 0):
+        tb = np.argmin((D[i, j], D[i, j + 1], D[i + 1, j]))
+        if tb == 0:
+            i -= 1
+            j -= 1
+        elif tb == 1:
+            i -= 1
+        else:  # (tb == 2):
+            j -= 1
+        p.insert(0, i)
+        q.insert(0, j)
+    return np.array(p), np.array(q)
+
+
+def dtw_easy(x, y, dist, warp=1, s=1.0):
+    """
+    Computes Dynamic Time Warping (DTW) of two sequences.
+
+    :param array x: N1*M array
+    :param array y: N2*M array
+    :param func dist: distance used as cost measure
+    :param int warp: how many shifts are computed.
+    :param int w: window size limiting the maximal distance between indices of matched entries |i,j|.
+    :param float s: weight applied on off-diagonal moves of the path. As s gets larger, the warping path is increasingly biased towards the diagonal
+    Returns the minimum distance, the cost matrix, the accumulated cost matrix, and the wrap path.
+    """
+    assert len(x)
+    assert len(y)
+    assert s > 0
+    r, c = len(x), len(y)
+
+    D0 = np.zeros((r + 1, c + 1))
+    D0[0, 1:] = np.inf
+    D0[1:, 0] = np.inf
+
+    D1 = D0[1:, 1:]  # view
+
+    for i in range(r):
+        for j in range(c):
+            D1[i, j] = dist(x[i], y[j])
+    C = D1.copy()
+
+    jrange = range(c)
+    for i in range(r):
+        for j in jrange:
+            min_list = [D0[i, j]]
+            for k in range(1, warp + 1):
+                i_k = min(i + k, r)
+                j_k = min(j + k, c)
+                min_list += [D0[i_k, j] * s, D0[i, j_k] * s]
+            D1[i, j] += min(min_list)
+    if len(x) == 1:
+        path = np.zeros(len(y)), range(len(y))
+    elif len(y) == 1:
+        path = range(len(x)), np.zeros(len(x))
+    else:
+        path = _traceback(D0)
+    return D1[-1, -1], C, D1, path
 
 def performSOFTDBA(pieces, show=False):
     """
