@@ -21,15 +21,15 @@
 
 | CONTENT                            | IMPLEMENT | EXAMPLE  |
 | ---------------------------------- | --------- | -------- |
-| White Noise                        | &#10004;  |          |
-| Band-Limited White Noise           | &#10004;  |          |
-| Coloured Noise                     | &#10004;  |          |
-| Impulsive and Click Noise          | &#10004;  |          |
+| White Noise                        | &#10004;  | &#10004; |
+| Band-Limited White Noise           | &#10004;  | &#10004; |
+| Coloured Noise                     | &#10004;  | &#10004; |
+| Impulsive and Click Noise          | &#10004;  | &#10004; |
 | ~~Transient Noise Pulses~~         |           |          |
 | Thermal Noise                      | &#10004;  |          |
 | ~~Shot Noise~~                     |           |          |
-| Filcker(1/f) Noise                 | &#10004;  |          |
-| Burst Noise                        | &#10004;  |          |
+| Filcker(1/f) Noise                 | &#10004;  | &#10004; |
+| Burst Noise                        | &#10004;  | &#10004; |
 | ~~Natural Sources of Radio Noise~~ |           |          |
 | Man-made Sources of Radio Noise    | &#10004;  |          |
 | Echo and Multi-path Reflections    | &#10004;  | &#10004; |
@@ -38,25 +38,27 @@
 
 ### Noise Filters
 
-| TYPE                      | CONTENT                             | IMPLEMENT | EXAMPLE  |
-| ------------------------- | ----------------------------------- | --------- | -------- |
-| Linear Filters            | Bandpass                            | &#10004;  | &#10004; |
-|                           | Bandstop                            | &#10004;  | &#10004; |
-|                           | Lowpass                             | &#10004;  | &#10004; |
-|                           | Highpass                            | &#10004;  | &#10004; |
-|                           | Simple Moving Average               | &#10004;  | &#10004; |
-|                           | Exponential Moving Average          | &#10004;  | &#10004; |
-| Adaptive Filters          | Kalman Filters                      |           |          |
-|                           | Extended Kalman Filter (EFK)        |           |          |
-|                           | Unscented Kalman Filter (UFK)       |           |          |
-|                           | Sample Adaptive Filters (LMS & RLS) | &#10004;  |          |
-| Particle Filters          | Particle Filter                     |           |          |
-| Savgol Filters            | Savgol Filters                      | &#10004;  | &#10004; |
-| Wiener Filters            | Wiener Filters                      | &#10004;  | &#10004; |
-| Matched Filters           | Matched Filters                     | &#10004;  | &#10004; |
-| Wavelet denoising         | Wavelet denoising                   | &#10004;  | &#10004; |
-| FFT denoising             | FFT denoising                       | &#10004;  | &#10004; |
-| PCA-based noise reduction | PCA-based noise reduction           | &#10004;  | &#10004; |
+| TYPE                      | CONTENT                       | IMPLEMENT | EXAMPLE  |
+| ------------------------- | ----------------------------- | --------- | -------- |
+| Linear Filters            | Bandpass                      | &#10004;  | &#10004; |
+|                           | Bandstop                      | &#10004;  | &#10004; |
+|                           | Lowpass                       | &#10004;  | &#10004; |
+|                           | Highpass                      | &#10004;  | &#10004; |
+|                           | Simple Moving Average         | &#10004;  | &#10004; |
+|                           | Exponential Moving Average    | &#10004;  | &#10004; |
+| Kalman Filters            | Kalman Filter                 |           |          |
+|                           | Extended Kalman Filter (EFK)  |           |          |
+|                           | Unscented Kalman Filter (UFK) |           |          |
+| Particle Filters          | Particle Filter               |           |          |
+| Sample Adaptive Filters   | LMS                           | &#10004;  | &#10004; |
+|                           | RLS                           | &#10004;  | &#10004; |
+| Savgol Filter             | Savgol Filter                 | &#10004;  | &#10004; |
+| Wiener Filter             | Wiener Filter                 | &#10004;  | &#10004; |
+| Notch Filter              | Notch Filter                  | &#10004;  | &#10004; |
+| Matched Filter            | Matched Filter                | &#10004;  | &#10004; |
+| Wavelet denoising         | Wavelet denoising             | &#10004;  | &#10004; |
+| FFT denoising             | FFT denoising                 | &#10004;  | &#10004; |
+| PCA-based noise reduction | PCA-based noise reduction     | &#10004;  | &#10004; |
 
 ### Decomposition
 
