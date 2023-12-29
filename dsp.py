@@ -1577,7 +1577,8 @@ def matched_filter(signal, template, show=False):
     template = np.flip(template)
 
     # Perform convolution using numpy's convolve function
-    filtered_signal = np.convolve(signal, template, mode='full')
+    # filtered_signal = np.convolve(signal, template, mode='full')
+    filtered_signal = lfilter(template, 1, signal)
 
     if show:
         plt.figure()
