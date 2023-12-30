@@ -9,8 +9,18 @@ import padasip as pa
 from dsp_utils import plot_sim_waves, plot_noise_signal, plot_decomposed_components, plot_filtered_signal
 import pywt
 import pandas as pd
-
+from Dataset import load_scg
 import os
+
+def load_demo(noise_level=0, signal_idx=0):
+
+    signals_clean, labels_clean, duration, fs = load_scg(noise_level, 'train')
+    signal = signals_clean[signal_idx]
+    sampling_rate = fs
+    time = np.linspace(0, duration, sampling_rate * duration, endpoint=False)
+
+    return signal, time, duration, sampling_rate
+
 # ==============================================================================
 # ------------------------------------Waves-------------------------------------
 # ==============================================================================
