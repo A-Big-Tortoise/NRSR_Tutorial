@@ -1397,7 +1397,7 @@ def exponential_moving_average_filter(signal, length=10, alpha=None, show=False)
 
     return filtered_signal
 
-def savgol_filter(signal, window_length=32, polyorder=1, show=False):
+def savgol_filter(signal, window_length=32, polyorder=1, deriv=0, delta=1.0, show=False):
     """
     Apply a Savitzky-Golay filter to the input signal for smoothing.
 
@@ -1415,7 +1415,7 @@ def savgol_filter(signal, window_length=32, polyorder=1, show=False):
     filtered_signal : array-like
         The smoothed signal after applying the Savitzky-Golay filter.
     """
-    filtered_signal = scipy.signal.savgol_filter(signal, window_length, polyorder)
+    filtered_signal = scipy.signal.savgol_filter(signal, window_length, polyorder, deriv, delta)
 
     if show:
         plot_filtered_signal(filtered_signal, signal, "Savitzky-Golay Filter")
