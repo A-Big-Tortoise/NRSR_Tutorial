@@ -1,5 +1,5 @@
-EMD_signal==1.4.0
-ewtpy==0.2
+EMD_signal
+ewtpy
 matplotlib==3.5.3
 numpy==1.22.3
 padasip==1.2.2

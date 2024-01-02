@@ -56,6 +56,8 @@ def plot_noise_signal(original_signal, noisy_signal, title_name):
     plt.figure()
     plt.plot(noisy_signal, label='Noisy Signal')
     plt.plot(original_signal, label='Original Signal')
+    plt.ylabel('Amplitude')
+    plt.xlabel('Time')
     plt.title(title_name)
     plt.legend()
     plt.show()
@@ -74,13 +76,16 @@ def plot_decomposed_components(signal, components, title_name):
         plt.subplot(n_components+1, 1, cnt+2)
         plt.plot(component, label='Component'+str(cnt+1))
         plt.legend()
-
+    plt.ylabel('Amplitude')
+    plt.xlabel('Time')
     plt.show()
 
 def plot_filtered_signal(filtered_signal, signal, title_name):
     plt.figure()
     plt.plot(signal, label='Original Signal', alpha=0.6)
     plt.plot(filtered_signal, label='Filtered Signal')
+    plt.ylabel('Amplitude')
+    plt.xlabel('Time')
     plt.title(title_name)
     plt.legend()
     plt.show()
@@ -88,6 +93,8 @@ def plot_filtered_signal(filtered_signal, signal, title_name):
 def plot_sim_waves(signal, wave_name):
     plt.figure()
     plt.plot(signal, label=wave_name)
+    plt.ylabel('Amplitude')
+    plt.xlabel('Time')
     plt.title('Generated Wave')
     plt.legend()
     plt.show()
@@ -97,14 +104,16 @@ def plot_adp_filtered_signal(y, d_signal, error):
 
     plt.subplot(211)
     plt.title("Adaptation")
-    plt.xlabel("samples - k")
+    plt.ylabel('Amplitude')
+    plt.xlabel('Time')
     plt.plot(d_signal, "b", label="d_signal - target")
     plt.plot(y, "g", label="output")
     plt.legend()
 
     plt.subplot(212)
     plt.title("Filter error")
-    plt.xlabel("samples - k")
+    plt.ylabel('Amplitude')
+    plt.xlabel('Time')
     plt.plot(10 * np.log10(error ** 2), "r", label="error [dB]")
     plt.legend()
 
@@ -117,5 +126,7 @@ def plot_averaging_center(center, pieces):
     for piece in pieces:
         plt.plot(piece, alpha=0.35)
     plt.plot(center, "r", linewidth=2, label="Center")
+    plt.ylabel('Amplitude')
+    plt.xlabel('Time')
     plt.legend()
     plt.show()
