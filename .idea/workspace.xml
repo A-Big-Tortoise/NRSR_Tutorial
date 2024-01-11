@@ -5,21 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4041f1b4-5b94-4489-8737-9e2c5cf84252" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../Frequency/Freq_150.ipynb" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../Frequency/Freq_200.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Clustering.ipynb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DTW/DTW_framework_DBA.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/DBA.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DTW/DTW_framework_DBA_Noise.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/DBA_Noise.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DTW/KSC.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/KSC.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DTW/NLAAF.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/NLAAF.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../DTW/PSA.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/PSA.ipynb" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../RealData/Implementation.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../RealData/Implementation.ipynb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../DTW/DBA_RRNoise.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/../DTW/DBA_RRNoise.ipynb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/2023/BedDot_HRRRIBI_accepted.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/2023/BedDot_HRRRIBI_accepted.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/GTW.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/GTW.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/NOT SURE/Nonsmooth Analysis and Subgradient Methods for Averaging in DTW Spaces.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/SSG.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/SSG.pdf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../Paper4Reference/Get Template/Time-Serious Average/Time-series averaging using constrained dynamic time warping with tolerance.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dataset/classification_S/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dataset/classification_S/sim_3000_0.1_90_180_test_template.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dataset/classification_S/sim_5000_0.1_90_180_train_template.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dataset/classification_S/test.npy" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dsp.py" beforeDir="false" afterPath="$PROJECT_DIR$/dsp.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../toolbox.py" beforeDir="false" afterPath="$PROJECT_DIR$/../toolbox.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,6 +30,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/requirements.txt" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -45,14 +42,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;true&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;org.jetbrains.plugins.notebooks.jupyter.connections.configuration.JupyterServerConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "true",
+    "last_opened_file_path": "D:/PHD/Tutorial_dev",
+    "settings.editor.selected.configurable": "org.jetbrains.plugins.notebooks.jupyter.connections.configuration.JupyterServerConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Python.add_noises">
     <configuration name="add_noises" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Tutorial" />
@@ -123,6 +121,7 @@
       <workItem from="1700639529931" duration="4987000" />
       <workItem from="1700644658589" duration="947000" />
       <workItem from="1700717881799" duration="8000" />
+      <workItem from="1704288208875" duration="2444000" />
     </task>
     <servers />
   </component>
