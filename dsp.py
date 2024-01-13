@@ -468,18 +468,15 @@ def add_burst_noise(
     # Calculate the amplitude of the burst noise to be added
     amp = noise_amplitude * signal_sd
 
-    # Initialize the starting point for burst noise events
-    burst_start = np.random.randint(0, (signal_length - burst_durations[1] + 1) // burst_num_max)
-
     # Generate burst noise events based on specified parameters
     for _ in range(burst_num_max):
+        # Initialize the starting point for burst noise events
+        burst_start = np.random.randint(0, (signal_length - burst_durations[1] + 1))
         burst_duration = np.random.randint(burst_durations[0], burst_durations[1])
         burst_end = burst_start + burst_duration
 
         if burst_end >= signal_length:
             burst_end = signal_length
-
-        burst_end = burst_start + burst_duration
 
         _noise[burst_start: burst_end] += np.random.normal(0, amp, size=burst_end-burst_start)
 
@@ -493,75 +490,58 @@ def add_burst_noise(
     return noisy_signal
 
 
-def spectral_density(frequency_range, magnitude=1, noise_exponent=1):
+def add_colored_noise(signal, noise_amplitude=0.3, model='white', sampling_rate=100, duration=10, show=False):
     """
-    Calculate the spectral density of pink noise.
+    Add colored noise to a given signal.
 
     Parameters:
-        frequency_range (array-like): Array of positive frequencies.
-        Magnitude (float): Magnitude of the noise.
-        noise_exponent (float): Exponent determining the slope of the spectral density.
+        - signal (array): Input signal to which colored noise will be added.
+        - noise_amplitude (float): Amplitude of the colored noise relative to the standard deviation of the input signal.
+        - model (str): Type of colored noise to be added ('white', 'blue', 'brown', 'pink').
+        - sampling_rate (int): Sampling rate of the signal.
+        - duration (int): Duration of the generated noise in seconds.
+        - show (bool): If True, plot the original and noisy signals.
 
     Returns:
-        array: Spectral density values.
+        - array: Noisy signal with colored noise added.
     """
-    return magnitude / (frequency_range ** noise_exponent)
 
-def add_colored_noise(
-        signal, noise_amplitude=0.3, model=0, sampling_rate=100, duration=10,  show=False
-):
-    """
-    Add colored noise to a signal.
+    # Define Power Spectral Density (PSD) function based on selected noise model
+    if model == 'blue':
+        def psd(f):
+            return np.sqrt(f)
+    elif model == 'brown':
+        def psd(f):
+            return 1 / np.where(f == 0, float('inf'), f)
+    elif model == 'pink':
+        def psd(f):
+            return 1 / np.where(f == 0, float('inf'), np.sqrt(f))
+    else:
+        def psd(f):
+            return 1
 
-    Parameters:
-    signal : array-like
-        The input signal to which colored noise will be added.
-    noise_amplitude : float, optional
-        The amplitude of the noise.
-    sampling_rate : int, optional
-        The sampling rate of the audio signal.
-    duration : float, optional
-        Duration of the colored noise signal in seconds.
-    model : int, optional
-        The type of colored noise to generate:
-        - 0: Pink noise
-        - 1: Brown noise
-    show : bool, optional
-        Whether to display a plot of the noisy signal.
+    # Calculate noise amplitude based on the standard deviation of the input signal
+    noise_amplitude = np.std(signal) * noise_amplitude
 
-    Returns:
-    noisy_signal : array-like
-        An array containing the values of the signal with added colored noise.
-    """
-    if model == 0:
-        # Pink noise
-        noise_exponent = 1
-        magnitude = 1
-    elif model == 1:
-        # Brown noise
-        noise_exponent = 2
-        magnitude = 1
+    # Generate white noise in the frequency domain
+    n_samples = sampling_rate * duration
+    white_noise = np.random.randn(n_samples) * noise_amplitude
+    X_white = np.fft.rfft(white_noise)
 
-    num_samples = int(sampling_rate * duration)
-    frequency_range = np.fft.fftfreq(num_samples)[1: num_samples // 2]
+    # Calculate Power Spectral Density (PSD) of the noise
+    S = psd(np.fft.rfftfreq(n_samples))
 
-    # Calculate spectral density using the provided function
-    _spectral_density = spectral_density(frequency_range, magnitude, noise_exponent)
+    # Normalize PSD
+    S = S / np.sqrt(np.mean(S**2))
 
-    # Generate random phases for each frequency component
-    random_phases = np.random.uniform(0, 2 * np.pi, len(frequency_range))
+    # Shape white noise to match the desired PSD
+    X_shaped = X_white * S
 
-    # Combine magnitude and phases to form the complex spectrum
-    spectrum = np.sqrt(_spectral_density) * np.exp(1j * random_phases)
+    # Transform back to time domain to get colored noise
+    colored_noise = np.fft.irfft(X_shaped)
 
-    # Perform inverse FFT to convert complex spectrum to time-domain signal
-    _colored_noise = np.fft.irfft(spectrum, n=num_samples)
-
-    # Scale the colored noise to achieve the desired maximum amplitude
-    _colored_noise *= np.max(signal) * noise_amplitude
-
-    # Add the colored noise to the input signal
-    noisy_signal = _colored_noise + signal
+    # Add colored noise to the original signal
+    noisy_signal = signal + colored_noise
 
     if show:
         # If requested, plot the original and noisy signals
@@ -571,7 +551,7 @@ def add_colored_noise(
 
 
 def add_flicker_noise(
-        signal, noise_amplitude=0.3, sampling_rate=100, duration=10, magnitude=1, noise_exponent=1, show=False
+        signal, noise_amplitude=0.3, sampling_rate=100, duration=10, show=False
 ):
     """
     Add flicker (1/f) noise to a signal.
@@ -596,32 +576,38 @@ def add_flicker_noise(
     noisy_signal : array-like
         An array containing the values of the signal with added flicker noise.
     """
-    num_samples = int(sampling_rate * duration)
-    frequency_range = np.fft.fftfreq(num_samples)[1: num_samples // 2]
+    def psd(f):
+        return 1 / np.where(f == 0, float('inf'), np.sqrt(f))
 
-    # Calculate spectral density using the provided function
-    _spectral_density = spectral_density(frequency_range, magnitude, noise_exponent)
+    # Calculate noise amplitude based on the standard deviation of the input signal
+    noise_amplitude = np.std(signal) * noise_amplitude
 
-    # Generate random phases for each frequency component
-    random_phases = np.random.uniform(0, 2 * np.pi, len(frequency_range))
+    # Generate white noise in the frequency domain
+    n_samples = sampling_rate * duration
+    white_noise = np.random.randn(n_samples) * noise_amplitude
+    X_white = np.fft.rfft(white_noise)
 
-    # Combine magnitude and phases to form the complex spectrum
-    spectrum = np.sqrt(_spectral_density) * np.exp(1j * random_phases)
+    # Calculate Power Spectral Density (PSD) of the noise
+    S = psd(np.fft.rfftfreq(n_samples))
 
-    # Perform inverse FFT to convert complex spectrum to time-domain signal
-    _flicker_noise = np.fft.irfft(spectrum, n=num_samples)
+    # Normalize PSD
+    S = S / np.sqrt(np.mean(S**2))
 
-    # Scale the flicker noise to achieve the desired maximum amplitude
-    _flicker_noise *= np.max(signal) * noise_amplitude
+    # Shape white noise to match the desired PSD
+    X_shaped = X_white * S
 
-    # Add the flicker noise to the input signal
-    noisy_signal = _flicker_noise + signal
+    # Transform back to time domain to get colored noise
+    colored_noise = np.fft.irfft(X_shaped)
+
+    # Add colored noise to the original signal
+    noisy_signal = signal + colored_noise
 
     if show:
         # If requested, plot the original and noisy signals
         plot_noise_signal(signal, noisy_signal, 'Add Flicker Noise')
 
     return noisy_signal
+
 
 def add_thermal_noise(
         signal, noise_amplitude=0.3, sampling_rate=100, duration=10, Temperature=100, show=False
@@ -700,10 +686,15 @@ def add_powerline_noise(
     noisy_signal : array-like
         An array containing the values of the signal with added powerline noise.
     """
-    nyquist = sampling_rate * 0.5
+    nyquist = sampling_rate * 0.4
 
     # Check if the specified powerline frequency is above the Nyquist frequency
     if powerline_frequency > nyquist:
+        print(
+            f"Skipping requested noise frequency of {powerline_frequency} Hz since it cannot be resolved at "
+            f"the sampling rate of {sampling_rate} Hz. Please increase sampling rate to {sampling_rate * 2.5} Hz or choose "
+            f"frequencies smaller than or equal to {nyquist} Hz."
+        )
         return np.zeros(len(signal))
 
     # Calculate the standard deviation of the input signal
