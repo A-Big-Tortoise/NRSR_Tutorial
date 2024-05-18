@@ -1,0 +1,12 @@
+*.npy
+*.zip
+
+__pycache__/
+venv/
+*.pyc
+*.log
+build/
+dist/
+
+.vscode/
+.idea/

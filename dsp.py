@@ -1,16 +1,19 @@
 import numpy as np
 from PyEMD import EEMD, EMD, CEEMDAN
-from vmdpy import VMD
+# from vmdpy import VMD
 from statsmodels.tsa.seasonal import seasonal_decompose
 import matplotlib.pyplot as plt
 import scipy.signal
-from scipy.signal import butter, lfilter, iirnotch, correlate
-import padasip as pa
+from scipy.signal import butter, lfilter, iirnotch, correlate, stft
+# import padasip as pa
 # from dsp_utils import plot_sim_waves, plot_noise_signal, plot_decomposed_components, plot_filtered_signal
 import pywt
 import pandas as pd
 from Dataset import load_scg
+from Core2dsp import PLOT_Jiayu
+
 import os
+
 
 def load_demo(noise_level=0, signal_idx=0):
 
@@ -20,6 +23,96 @@ def load_demo(noise_level=0, signal_idx=0):
     time = np.linspace(0, duration, sampling_rate * duration, endpoint=False)
 
     return signal, time, duration, sampling_rate
+
+# ==============================================================================
+# --------------------------Time-Frequency Analysis-----------------------------
+# ==============================================================================
+
+def cal_fft(signal, sampling_rate, show=False):
+
+    n = len(signal)
+    fft_result = np.fft.fft(signal)
+    freqs = np.fft.fftfreq(n, 1/sampling_rate)
+    # The reasons for normalizing the amplitude spectrum:
+    # 1. Consistency:  Without normalization, amplitude values may vary due to signal length or sampling rate differences. Normalization ensures consistent values that accurately reflect the contribution of each frequency, allowing comparison of signals with different lengths or sampling rates. Without it, variations in these factors would make amplitude comparisons difficult.
+    # 2. Average Amplitude: Dividing amplitude by the signal length n ensures that total energy (or power) doesn't vary significantly due to different signal lengths. This operation aligns the amplitude values with the time-domain signal's energy.
+    amplitude_spectrum = np.abs(fft_result) / n
+    positive_freqs = freqs[:n//2]
+    positive_amplitude_spectrum = amplitude_spectrum[:n//2] * 2
+
+    if show:
+        PLOT_Jiayu.plot(positive_freqs, positive_amplitude_spectrum, xlabel='Frequency (Hz)', ylabel='Amplitude')
+    return positive_freqs, positive_amplitude_spectrum
+
+def cal_stft(signal, sampling_rate, window='hann', nperseg=256, noverlap=None, show=False):
+    """
+    Compute the Short-Time Fourier Transform (STFT) of a given signal and return the frequency, time, and STFT matrix.
+
+    Parameters:
+    - signal: Input signal
+    - sampling_rate: Sampling rate in Hertz (Hz)
+    - window: Window function name or a custom window (default is 'hann')
+    - nperseg: Number of samples per segment (default is 256)
+    - noverlap: Number of overlapping samples between segments (default is nperseg/2)
+
+    Returns:
+    - freqs: Frequency axis
+    - times: Time axis
+    - stft_matrix: Complex matrix representing the STFT result
+    """
+    noverlap = nperseg // 2 if noverlap is None else noverlap
+
+    freqs, times, stft_matrix = stft(signal, fs=sampling_rate, window=window, nperseg=nperseg, noverlap=noverlap)
+
+    magnitude = np.abs(stft_matrix)
+
+    if show:
+        fig, axes = plt.subplots()
+        PLOT_Jiayu.set_figsize()
+        axes.cla()
+        pcm = axes.pcolormesh(times, freqs, magnitude)
+        fig.colorbar(pcm, label='Magnitude')
+        PLOT_Jiayu.set_axes(axes, ylabel='Frequency (Hz)', xlabel='Time (s)',  xlim=None, ylim=None,  xscale='linear', yscale='linear', legend=None)
+
+    return freqs, times, stft_matrix
+
+
+def time_centroid_width(signal, sampling_rate):
+    """
+    Calculates the time centroid and width.
+
+    Parameters:
+    - signal: Input signal (1D array)
+    - sampling_rate: Sampling rate in Hertz (Hz)
+
+    Returns:
+    - t_c: The time centroid in seconds
+    - t_w: Time width in seconds
+    """
+    time_indices = np.arange(len(signal)) / sampling_rate
+    signal_energy = np.abs(signal) ** 2
+    t_c = np.sum(time_indices * signal_energy) / np.sum(signal_energy)
+    t_w = np.sqrt(np.sum((time_indices - t_c) ** 2 * signal_energy) / np.sum(signal_energy))
+    return t_c, t_w
+
+
+def frequency_centroid_width(signal, sampling_rate):
+    """
+    Calculates the frequency centroid and bandwidth.
+
+    Parameters:
+    - signal: Input signal (1D array)
+    - sampling_rate: Sampling rate in Hertz (Hz)
+
+    Returns:
+    - f_c: The frequency centroid in Hertz
+    - b_w: Bandwidth in Hertz
+    """
+    positive_freqs, positive_amplitude = cal_fft(signal, sampling_rate)
+    f_c = np.sum(positive_freqs * positive_amplitude) / np.sum(positive_amplitude)
+    b_w = np.sqrt(np.sum((positive_freqs - f_c) ** 2 * positive_amplitude) / np.sum(positive_amplitude))
+    return f_c, b_w
+
 
 # ==============================================================================
 # ------------------------------------Waves-------------------------------------
@@ -904,188 +997,188 @@ def add_distort_noise(
 
 def standize_1D(signal):
     return (signal - signal.mean()) / signal.std()
+#
+# def emd_decomposition(signal, show=False):
+#     """
+#     Perform Empirical Mode Decomposition (EMD) on a 1D signal.
+#
+#     Parameters:
+#     signal : array-like
+#         The input signal to be decomposed using EMD.
+#     show : bool, optional
+#         Whether to display a plot of the decomposed components.
+#
+#     Returns:
+#     imfs : list
+#         A list of Intrinsic Mode Functions (IMFs) obtained from EMD decomposition.
+#     """
+#     # Standardize the input signal
+#     signal = standize_1D(signal)
+#
+#     # Create an instance of the EMD class
+#     emd = EMD()
+#
+#     # Perform EMD decomposition to obtain IMFs
+#     imfs = emd(signal)
+#
+#     if show:
+#         plot_decomposed_components(signal, imfs, 'EMD')
+#
+#     return imfs
+#
+# def eemd_decomposition(signal, noise_width=0.05, ensemble_size=100, show=False):
+#     """
+#     Perform Ensemble Empirical Mode Decomposition (EEMD) on a 1D signal.
+#
+#     Parameters:
+#     signal : array-like
+#         The input signal to be decomposed using EEMD.
+#     noise_width : float, optional
+#         Width of the white noise to add to the signal for EEMD ensemble generation.
+#     ensemble_size : int, optional
+#         Number of ensemble trials to perform EEMD.
+#     show : bool, optional
+#         Whether to display a plot of the decomposed components.
+#
+#     Returns:
+#     imfs : list
+#         A list of Intrinsic Mode Functions (IMFs) obtained from EEMD decomposition.
+#     """
+#     # Standardize the input signal
+#     signal = standize_1D(signal)
+#
+#     # Create an instance of the EEMD class with specified ensemble parameters
+#     eemd = EEMD(trials=ensemble_size, noise_width=noise_width)
+#
+#     # Perform EEMD decomposition to obtain IMFs
+#     imfs = eemd.eemd(signal)
+#
+#     if show:
+#         plot_decomposed_components(signal, imfs, 'EEMD')
+#
+#     return imfs
+#
+# def ceemd_decomposition(signal, show=False):
+#     """
+#     Perform Complete Ensemble Empirical Mode Decomposition with Adaptive Noise (CEEMDAN) on a 1D signal.
+#
+#     Parameters:
+#     signal : array-like
+#         The input signal to be decomposed using CEEMDAN.
+#     show : bool, optional
+#         Whether to display a plot of the decomposed components.
+#
+#     Returns:
+#     imfs : list
+#         A list of Intrinsic Mode Functions (IMFs) obtained from CEEMDAN decomposition.
+#     """
+#     # Preprocess the input signal (e.g., standardize or denoise if necessary)
+#     signal = standize_1D(signal)
+#
+#     # Create an instance of the CEEMDAN class
+#     ceemdan = CEEMDAN()
+#
+#     # Perform CEEMDAN decomposition on the preprocessed signal to obtain IMFs
+#     imfs = ceemdan.ceemdan(signal)
+#
+#     if show:
+#         plot_decomposed_components(signal, imfs, 'CEEMDAN')
+#
+#     # Return the resulting IMFs
+#     return imfs
+#
 
-def emd_decomposition(signal, show=False):
-    """
-    Perform Empirical Mode Decomposition (EMD) on a 1D signal.
-
-    Parameters:
-    signal : array-like
-        The input signal to be decomposed using EMD.
-    show : bool, optional
-        Whether to display a plot of the decomposed components.
-
-    Returns:
-    imfs : list
-        A list of Intrinsic Mode Functions (IMFs) obtained from EMD decomposition.
-    """
-    # Standardize the input signal
-    signal = standize_1D(signal)
-
-    # Create an instance of the EMD class
-    emd = EMD()
-
-    # Perform EMD decomposition to obtain IMFs
-    imfs = emd(signal)
-
-    if show:
-        plot_decomposed_components(signal, imfs, 'EMD')
-
-    return imfs
-
-def eemd_decomposition(signal, noise_width=0.05, ensemble_size=100, show=False):
-    """
-    Perform Ensemble Empirical Mode Decomposition (EEMD) on a 1D signal.
-
-    Parameters:
-    signal : array-like
-        The input signal to be decomposed using EEMD.
-    noise_width : float, optional
-        Width of the white noise to add to the signal for EEMD ensemble generation.
-    ensemble_size : int, optional
-        Number of ensemble trials to perform EEMD.
-    show : bool, optional
-        Whether to display a plot of the decomposed components.
-
-    Returns:
-    imfs : list
-        A list of Intrinsic Mode Functions (IMFs) obtained from EEMD decomposition.
-    """
-    # Standardize the input signal
-    signal = standize_1D(signal)
-
-    # Create an instance of the EEMD class with specified ensemble parameters
-    eemd = EEMD(trials=ensemble_size, noise_width=noise_width)
-
-    # Perform EEMD decomposition to obtain IMFs
-    imfs = eemd.eemd(signal)
-
-    if show:
-        plot_decomposed_components(signal, imfs, 'EEMD')
-
-    return imfs
-
-def ceemd_decomposition(signal, show=False):
-    """
-    Perform Complete Ensemble Empirical Mode Decomposition with Adaptive Noise (CEEMDAN) on a 1D signal.
-
-    Parameters:
-    signal : array-like
-        The input signal to be decomposed using CEEMDAN.
-    show : bool, optional
-        Whether to display a plot of the decomposed components.
-
-    Returns:
-    imfs : list
-        A list of Intrinsic Mode Functions (IMFs) obtained from CEEMDAN decomposition.
-    """
-    # Preprocess the input signal (e.g., standardize or denoise if necessary)
-    signal = standize_1D(signal)
-
-    # Create an instance of the CEEMDAN class
-    ceemdan = CEEMDAN()
-
-    # Perform CEEMDAN decomposition on the preprocessed signal to obtain IMFs
-    imfs = ceemdan.ceemdan(signal)
-
-    if show:
-        plot_decomposed_components(signal, imfs, 'CEEMDAN')
-
-    # Return the resulting IMFs
-    return imfs
-
-
-def vmd_decomposition(signal, K=5, alpha=2000, tau=0, DC=0, init=1, tol=1e-7, show=False):
-    """
-    Perform Variational Mode Decomposition (VMD) on a 1D signal.
-
-    Parameters:
-    signal : array-like
-        The input signal to be decomposed using VMD.
-    K : int, optional
-        Number of modes to decompose the signal into.
-    alpha : float, optional
-        Moderate bandwidth constraint for VMD.
-    tau : float, optional
-        Noise-tolerance parameter (no strict fidelity enforcement).
-    DC : int, optional
-        Whether to include a DC (direct current) part in the decomposition.
-    init : int, optional
-        Initialization parameter (1 for uniform initialization of omegas).
-    tol : float, optional
-        Tolerance parameter.
-
-    Returns:
-    u : array-like
-        An array containing the decomposed modes obtained from VMD decomposition.
-    """
-    # Standardize the input signal
-    signal = standize_1D(signal)
-
-    # Create an instance of the VMD class with specified parameters
-    vmd = VMD(signal, alpha, tau, K, DC, init, tol)
-
-    # Perform VMD decomposition to obtain the modes
-    u, _, _ = vmd
-
-    if show:
-        plot_decomposed_components(signal, u, 'VMD')
-
-    return u
-
-def seasonal_decomposition(signal, period=100, model=0, show=False):
-    """
-    Perform seasonal decomposition on a time series signal.
-
-    Parameters:
-    signal : array-like
-        The input time series signal to be decomposed.
-    period : int, optional
-        The period of the seasonal component.
-    model : int, optional
-        Model type for decomposition (0 for "additive", 1 for "multiplicative").
-    show : bool, optional
-        Whether to display a plot of the decomposed components.
-
-    Returns:
-    components : object
-        An object containing the decomposed components (seasonal, trend, resid).
-    """
-    # Standardize the input signal
-    signal = standize_1D(signal)
-
-    # Determine the decomposition model type
-    stl_model = None
-    if model == 0:
-        stl_model = "additive"
-    elif model == 1:
-        stl_model = "multiplicative"
-
-    # Perform seasonal decomposition
-    components = seasonal_decompose(signal, model=stl_model, period=period)
-
-    if show:
-        plt.subplots(4, 1)
-
-        plt.subplot(4, 1, 1)
-        plt.plot(signal, label='Original Signal', color='r')
-        plt.title("Seasonal Decomposition")
-        plt.legend()
-
-        plt.subplot(4, 1, 2)
-        plt.plot(components.trend, label='Trend')
-        plt.legend()
-
-        plt.subplot(4, 1, 3)
-        plt.plot(components.seasonal, label='Seasonal')
-        plt.legend()
-
-        plt.subplot(4, 1, 4)
-        plt.plot(components.resid, label='Residual')
-        plt.legend()
-        plt.show()
-
-    return components
+# def vmd_decomposition(signal, K=5, alpha=2000, tau=0, DC=0, init=1, tol=1e-7, show=False):
+#     """
+#     Perform Variational Mode Decomposition (VMD) on a 1D signal.
+#
+#     Parameters:
+#     signal : array-like
+#         The input signal to be decomposed using VMD.
+#     K : int, optional
+#         Number of modes to decompose the signal into.
+#     alpha : float, optional
+#         Moderate bandwidth constraint for VMD.
+#     tau : float, optional
+#         Noise-tolerance parameter (no strict fidelity enforcement).
+#     DC : int, optional
+#         Whether to include a DC (direct current) part in the decomposition.
+#     init : int, optional
+#         Initialization parameter (1 for uniform initialization of omegas).
+#     tol : float, optional
+#         Tolerance parameter.
+#
+#     Returns:
+#     u : array-like
+#         An array containing the decomposed modes obtained from VMD decomposition.
+#     """
+#     # Standardize the input signal
+#     signal = standize_1D(signal)
+#
+#     # Create an instance of the VMD class with specified parameters
+#     vmd = VMD(signal, alpha, tau, K, DC, init, tol)
+#
+#     # Perform VMD decomposition to obtain the modes
+#     u, _, _ = vmd
+#
+#     if show:
+#         plot_decomposed_components(signal, u, 'VMD')
+#
+#     return u
+#
+# def seasonal_decomposition(signal, period=100, model=0, show=False):
+#     """
+#     Perform seasonal decomposition on a time series signal.
+#
+#     Parameters:
+#     signal : array-like
+#         The input time series signal to be decomposed.
+#     period : int, optional
+#         The period of the seasonal component.
+#     model : int, optional
+#         Model type for decomposition (0 for "additive", 1 for "multiplicative").
+#     show : bool, optional
+#         Whether to display a plot of the decomposed components.
+#
+#     Returns:
+#     components : object
+#         An object containing the decomposed components (seasonal, trend, resid).
+#     """
+#     # Standardize the input signal
+#     signal = standize_1D(signal)
+#
+#     # Determine the decomposition model type
+#     stl_model = None
+#     if model == 0:
+#         stl_model = "additive"
+#     elif model == 1:
+#         stl_model = "multiplicative"
+#
+#     # Perform seasonal decomposition
+#     components = seasonal_decompose(signal, model=stl_model, period=period)
+#
+#     if show:
+#         plt.subplots(4, 1)
+#
+#         plt.subplot(4, 1, 1)
+#         plt.plot(signal, label='Original Signal', color='r')
+#         plt.title("Seasonal Decomposition")
+#         plt.legend()
+#
+#         plt.subplot(4, 1, 2)
+#         plt.plot(components.trend, label='Trend')
+#         plt.legend()
+#
+#         plt.subplot(4, 1, 3)
+#         plt.plot(components.seasonal, label='Seasonal')
+#         plt.legend()
+#
+#         plt.subplot(4, 1, 4)
+#         plt.plot(components.resid, label='Residual')
+#         plt.legend()
+#         plt.show()
+#
+#     return components
 
 
 class SSA(object):
@@ -1460,77 +1553,77 @@ def wiener_filter(signal, noise, show=False):
 
     return filtered_signal
 
-
-def rls_filter(x, d, n, mu, show=False):
-    """
-    Apply Recursive Least Squares (RLS) filter to input signal x to estimate a desired signal d.
-
-    Parameters:
-    - x: Input signal.
-    - d: Desired signal to be estimated.
-    - n: Order of the filter.
-    - mu: Convergence factor.
-
-    Returns:
-    - y: Output signal (estimated signal).
-    - e: Error signal (difference between estimated and desired signals).
-    - w: Filter weights after processing the signals.
-    """
-    x_np = np.array(x)
-    d_np = np.array(d)
-
-    # Ensure x and d are 2D arrays
-    if x_np.ndim == 1:
-        x_np = x_np.reshape(-1, 1)
-    if d_np.ndim == 1:
-        d_np = d_np.reshape(-1, 1)
-
-    # Create an RLS filter with specified parameters
-    f = pa.filters.FilterRLS(n=n, mu=mu, w="random")
-
-    # Run the RLS filter on the input and desired signals
-    y, e, w = f.run(d_np, x_np)
-
-    if show:
-        plot_filtered_signal(y, x, "Recursive Least Squares (RLS) Filter")
-
-    return y, e, w
-
-
-def lms_filter(x, d, n, mu, show=False):
-    """
-    Apply Least Mean Squares (LMS) filter to input signal x to estimate a desired signal d.
-
-    Parameters:
-    - x: Input signal.
-    - d: Desired signal to be estimated.
-    - n: Order of the filter.
-    - mu: Convergence factor.
-
-    Returns:
-    - y: Output signal (estimated signal).
-    - e: Error signal (difference between estimated and desired signals).
-    - w: Filter weights after processing the signals.
-    """
-    x_np = np.array(x)
-    d_np = np.array(d)
-
-    # Ensure x and d are 2D arrays
-    if x_np.ndim == 1:
-        x_np = x_np.reshape(-1, 1)
-    if d_np.ndim == 1:
-        d_np = d_np.reshape(-1, 1)
-
-    # Create an LMS filter with specified parameters
-    f = pa.filters.FilterLMS(n=n, mu=mu, w="random")
-
-    # Run the LMS filter on the input and desired signals
-    y, e, w = f.run(d_np, x_np)
-
-    if show:
-        plot_filtered_signal(y, x, "Least Mean Squares (LMS) Filter")
-
-    return y, e, w
+#
+# def rls_filter(x, d, n, mu, show=False):
+#     """
+#     Apply Recursive Least Squares (RLS) filter to input signal x to estimate a desired signal d.
+#
+#     Parameters:
+#     - x: Input signal.
+#     - d: Desired signal to be estimated.
+#     - n: Order of the filter.
+#     - mu: Convergence factor.
+#
+#     Returns:
+#     - y: Output signal (estimated signal).
+#     - e: Error signal (difference between estimated and desired signals).
+#     - w: Filter weights after processing the signals.
+#     """
+#     x_np = np.array(x)
+#     d_np = np.array(d)
+#
+#     # Ensure x and d are 2D arrays
+#     if x_np.ndim == 1:
+#         x_np = x_np.reshape(-1, 1)
+#     if d_np.ndim == 1:
+#         d_np = d_np.reshape(-1, 1)
+#
+#     # Create an RLS filter with specified parameters
+#     f = pa.filters.FilterRLS(n=n, mu=mu, w="random")
+#
+#     # Run the RLS filter on the input and desired signals
+#     y, e, w = f.run(d_np, x_np)
+#
+#     if show:
+#         plot_filtered_signal(y, x, "Recursive Least Squares (RLS) Filter")
+#
+#     return y, e, w
+#
+#
+# def lms_filter(x, d, n, mu, show=False):
+#     """
+#     Apply Least Mean Squares (LMS) filter to input signal x to estimate a desired signal d.
+#
+#     Parameters:
+#     - x: Input signal.
+#     - d: Desired signal to be estimated.
+#     - n: Order of the filter.
+#     - mu: Convergence factor.
+#
+#     Returns:
+#     - y: Output signal (estimated signal).
+#     - e: Error signal (difference between estimated and desired signals).
+#     - w: Filter weights after processing the signals.
+#     """
+#     x_np = np.array(x)
+#     d_np = np.array(d)
+#
+#     # Ensure x and d are 2D arrays
+#     if x_np.ndim == 1:
+#         x_np = x_np.reshape(-1, 1)
+#     if d_np.ndim == 1:
+#         d_np = d_np.reshape(-1, 1)
+#
+#     # Create an LMS filter with specified parameters
+#     f = pa.filters.FilterLMS(n=n, mu=mu, w="random")
+#
+#     # Run the LMS filter on the input and desired signals
+#     y, e, w = f.run(d_np, x_np)
+#
+#     if show:
+#         plot_filtered_signal(y, x, "Least Mean Squares (LMS) Filter")
+#
+#     return y, e, w
 
 def notch_filter(signal, cutoff=10, q=10, fs=100, show=False):
     """
