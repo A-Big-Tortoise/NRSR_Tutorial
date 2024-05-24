@@ -1,4 +1,0 @@
-from shapedtw.shapedtw import shape_dtw
-from shapedtw.shapeDescriptors import SlopeDescriptor, PAADescriptor, CompoundDescriptor
-
-from shapedtw.shapeDescriptors import RawSubsequenceDescriptor, DWTDescriptor, DerivativeShapeDescriptor
