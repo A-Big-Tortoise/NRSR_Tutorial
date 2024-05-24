@@ -3341,7 +3341,7 @@ def update_array(a, data_tmp):
     return a
 
 ## Singular Spectrum Transform (SST)
-def sst(signal, win_length):
+def sst(signal, win_length, n_components=5, order=None, lag=None):
     """
     Description:
         It is a change point detection algorithm
@@ -3351,7 +3351,7 @@ def sst(signal, win_length):
     Returns:
         score: an array measuring the degree of change
     """
-    sst = SingularSpectrumTransformation(win_length=win_length)
+    sst = SingularSpectrumTransformation(win_length=win_length, n_components=n_components, lag=lag, order=order)
     score = sst.score_offline(signal)
     return score
 
