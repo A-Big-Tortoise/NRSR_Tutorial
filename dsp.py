@@ -27,7 +27,6 @@ warnings.filterwarnings('ignore')
 with warnings.catch_warnings():
     warnings.simplefilter("ignore")
     from fastsst import SingularSpectrumTransformation
-from Core2dsp import PLOT_Jiayu
 
 plt.rcParams['figure.figsize'] = [8, 3] # figsize for signal
 
